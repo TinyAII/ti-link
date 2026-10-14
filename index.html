@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TI 联机 —— 免费的点对点联机工具</title>
+<meta name="description" content="免费的小工具：帮你和朋友的电脑直连。不转发数据、不要账号、不收费，双击就能用。">
+
+<!--
+  这一页的规矩（别破）：
+    · 不放任何第三方脚本、统计代码、字体外链 —— 一是不给用户添负担，二是
+      "网站收集了什么"和"软件收集了什么"是同一笔账，越少越好；
+    · 不加评论区、用户中心、在线人数 —— 那会把"一个工具页"变成"一个平台"；
+    · 不放广告、不放赞助位 —— 这个软件永远免费，不能有任何变现的口子。
+
+  ⚠️ 待替换：下面所有 href="#" 的下载链接，发布后换成实际地址。
+-->
+
+<style>
+  :root {
+    --fg: #16191d;
+    --fg2: #4d545c;
+    --hint: #878e96;
+    --line: #e4e8eb;
+    --soft: #f7f9fa;
+    --accent: #0e9c74;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: system-ui, -apple-system, "Segoe UI", "Microsoft YaHei", sans-serif;
+    color: var(--fg);
+    background: #fff;
+    line-height: 1.75;
+    -webkit-font-smoothing: antialiased;
+  }
+  .wrap { max-width: 780px; margin: 0 auto; padding: 0 22px; }
+
+  header { padding: 84px 0 56px; }
+  h1 { font-size: 34px; line-height: 1.35; margin: 0 0 16px; font-weight: 600; letter-spacing: -0.3px; }
+  .lead { font-size: 17px; color: var(--fg2); margin: 0 0 30px; }
+  .lead b { color: var(--fg); font-weight: 600; }
+  .cta { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
+  .btn {
+    display: inline-block; padding: 13px 30px; border-radius: 10px;
+    background: var(--accent); color: #fff; text-decoration: none;
+    font-size: 16px; font-weight: 600; border: 1px solid var(--accent);
+  }
+  .btn:hover { opacity: .9; }
+  .btn-ghost {
+    display: inline-block; padding: 13px 22px; border-radius: 10px;
+    border: 1px solid var(--line); color: var(--fg2); text-decoration: none; font-size: 15px;
+  }
+  .btn-ghost:hover { border-color: var(--hint); color: var(--fg); }
+  .note { font-size: 13.5px; color: var(--hint); margin-top: 16px; }
+
+  section { padding: 46px 0; border-top: 1px solid var(--line); }
+  h2 { font-size: 21px; margin: 0 0 20px; font-weight: 600; }
+  h3 { font-size: 16px; margin: 0 0 6px; font-weight: 600; }
+  p { margin: 0 0 14px; color: var(--fg2); }
+
+  .cols { display: grid; gap: 26px; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); }
+  .col p { font-size: 14.5px; margin: 0; }
+
+  .shots { display: grid; gap: 16px; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); }
+  .shots img { width: 100%; height: auto; border: 1px solid var(--line); border-radius: 12px; display: block; }
+  .cap { font-size: 13px; color: var(--hint); margin: 8px 0 0; }
+
+  ol { padding-left: 20px; margin: 0; color: var(--fg2); }
+  ol li { margin-bottom: 10px; }
+  ol b { color: var(--fg); }
+
+  ul.plain { list-style: none; padding: 0; margin: 0; }
+  ul.plain li {
+    font-size: 14.5px; color: var(--fg2); padding: 12px 0;
+    border-bottom: 1px solid var(--line);
+  }
+  ul.plain li:last-child { border-bottom: 0; }
+
+  footer { padding: 40px 0 70px; border-top: 1px solid var(--line); }
+  footer p { font-size: 13.5px; color: var(--hint); margin: 0 0 8px; }
+
+  .box { background: var(--soft); border-radius: 12px; padding: 20px 24px; }
+  .box p:last-child { margin-bottom: 0; }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+
+  <header>
+    <h1>和朋友联机，不用折腾端口映射</h1>
+    <p class="lead">
+      双击就能用的小工具。它帮两台电脑<b>直接找到对方</b>，
+      你们像在同一个局域网里一样联机 ——
+      <b>游戏数据不经过任何服务器</b>，速度就是你俩真实的网速。
+    </p>
+    <div class="cta">
+      <a class="btn" href="#">下载（即将开放）</a>
+      <a class="btn-ghost" href="#how">怎么用</a>
+    </div>
+    <p class="note">Windows · 免安装 · 完全免费</p>
+  </header>
+
+  <section>
+    <h2>和"内网穿透"有什么不一样</h2>
+    <div class="cols">
+      <div class="col">
+        <h3>数据不走服务器</h3>
+        <p>
+          常见的穿透工具是<b>中转</b>：你的数据要绕一圈经过它的节点，所以免费档总是限速限量。
+          这个工具是把两台电脑<b>直接接通</b> —— 服务器只负责"让你们互相知道对方在哪"，
+          之后一个字节都不经手。
+        </p>
+      </div>
+      <div class="col">
+        <h3>所以没有流量限制</h3>
+        <p>
+          既然是直连，速度和流量只取决于你俩自己的网络 ——
+          不会用着用着突然被限速，也不会每个月卡你几个 G。
+        </p>
+      </div>
+      <div class="col">
+        <h3>不用注册，不用登录</h3>
+        <p>
+          没有账号系统，不收集你的信息。房主开个房间、把房间号给朋友，
+          朋友填上就能进。
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>界面长这样</h2>
+    <div class="shots">
+      <div>
+        <img src="shots/create.png" alt="创建房间页面">
+        <p class="cap">开房：填个端口就行，房间号自动生成</p>
+      </div>
+      <div>
+        <img src="shots/room.png" alt="房间页面，显示成员列表">
+        <p class="cap">房间里：谁进来了、连没连上，一眼看得到</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="how">
+    <h2>怎么用</h2>
+    <ol>
+      <li><b>房主</b>打开软件，选「创建房间」，把游戏服务端开起来，然后把这串<b>房间号</b>发给朋友。</li>
+      <li><b>朋友</b>打开同一个软件，选「加入房间」，填上房间号。</li>
+      <li>在游戏里连接提示的地址 —— 就这样，两边会直接连上。</li>
+    </ol>
+    <p class="note">
+      两边都要装这个软件（一个 exe，双击即用）。
+      房主那边的游戏得先开着 —— 它是"服务器"那一端。
+    </p>
+  </section>
+
+  <section>
+    <h2>关于免费</h2>
+    <div class="box">
+      <p>
+        这个软件是作者自己联机玩的时候顺手做出来的，<b>不收费、不卖会员、没有广告</b>，
+        以后也不会变成那样。
+      </p>
+      <p>
+        唯一的要求是别拿它去干不该干的事。因为它不转发数据，本身也没有什么可"薅"的东西；
+        但既然挂着自己的名字，还是希望它干干净净的。
+      </p>
+    </div>
+  </section>
+
+  <section>
+    <h2>声明</h2>
+    <ul class="plain">
+      <li>本工具是<b>非官方</b>作品，与各游戏厂商（如 Mojang）没有任何关系，也不代表或代理任何官方服务。</li>
+      <li>软件内置的头像素材版权归各自原作者所有，此处仅作个人标记用途。</li>
+      <li>本工具只做点对点打洞与牵线：<b>不转发游戏数据、不存储任何内容、不提供接入服务</b>。</li>
+      <li>
+        联机服务器不保存聊天记录、不保存游戏数据；服务端日志里出现的地址做了打码处理
+        （只保留前两段，例如 <code>120.227.*.*</code>），仅用于排查故障。
+      </li>
+      <li>请遵守你所用游戏的服务条款，仅与自己的朋友联机游玩。</li>
+    </ul>
+  </section>
+
+  <footer>
+    <p>TI 联机 · 免费的点对点联机工具</p>
+    <p>本页面不加载任何第三方脚本，不做任何访问统计。</p>
+  </footer>
+
+</div>
+
+</body>
+</html>
