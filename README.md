@@ -4,7 +4,7 @@
 
 | 文件 | 用途 |
 |---|---|
-| `index.html` + `shots/` | 官网页面（GitHub Pages，`https://tinyaii.github.io/ti-link/`） |
+| `index.html` + `shots/` | 官网页面（GitHub Pages，<https://ti.tinyaii.cn/>） |
 | `latest.json` | 客户端「检测更新」拉的更新源 |
 
 ## latest.json 怎么改
