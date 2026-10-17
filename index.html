@@ -122,12 +122,13 @@
 
   /* 首屏大截图：直接放出来，让人一眼看见"它长什么样" ✓ */
   .hero-shot {
-    margin: 56px auto -2px;
+    /* 📌 原来是"贴到区块底边"的设计（负 margin + 只圆上角）；
+       2026-10-17 加了大图下面的图注之后，那样会被分区线切掉底部 ⇒ 改成正常留白+四角圆 ✓ */
+    margin: 56px auto 22px;
     max-width: 880px;
-    border-radius: var(--radius) var(--radius) 0 0;
+    border-radius: var(--radius);
     overflow: hidden;
     border: 1px solid var(--line);
-    border-bottom: 0;
     box-shadow: var(--shadow-lg);
     background: #fff;
   }
