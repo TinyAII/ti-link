@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>TI 联机 —— 免费的点对点联机工具</title>
-<meta name="description" content="免费的小工具：帮你和朋友的电脑直连。不转发数据、不要账号、不收费，双击就能用。">
+<meta name="description" content="免费的小工具：帮你和朋友的电脑直连。游戏数据不经过我们，双击就能用。">
 
 <!--
   这一页的规矩（别破）：
@@ -12,20 +12,32 @@
       "网站收集了什么"和"软件收集了什么"是同一笔账，越少越好；
     · 不加评论区、用户中心、在线人数 —— 那会把"一个工具页"变成"一个平台"；
     · 不放广告、不放赞助位 —— 这个软件永远免费，不能有任何变现的口子。
+    · 图标一律**内联 SVG**，不引外部图标库（同上：不加外链）。
 
   ⚠️ 待替换：下面所有 href="#" 的下载链接，发布后换成实际地址。
--->
 
+  2026-10-17 改版（老板：「现在官网太丑了」⇒ 选「浅色精致卡片风」）：
+    只改呈现，**一个字的正文都没动**。改的是：首屏加渐变和层次、
+    界面截图放大并提到前面、三列特性做成带图标的卡片、
+    「怎么用」做成步骤卡、声明区卡片化。
+-->
 <style>
   :root {
-    --fg: #16191d;
-    --fg2: #4d545c;
-    --hint: #878e96;
-    --line: #e4e8eb;
-    --soft: #f7f9fa;
+    --fg: #101418;
+    --fg2: #4b535c;
+    --hint: #8b939c;
+    --line: #e5e9ed;
+    --soft: #f6f8f9;
     --accent: #0e9c74;
+    --accent-2: #12b085;
+    --accent-soft: #eefaf5;
+    --radius: 16px;
+    --shadow: 0 1px 2px rgba(16, 20, 24, .04), 0 8px 24px -12px rgba(16, 20, 24, .12);
+    --shadow-lg: 0 2px 4px rgba(16, 20, 24, .04), 0 24px 60px -24px rgba(16, 20, 24, .22);
   }
   * { box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
   body {
     margin: 0;
     font-family: system-ui, -apple-system, "Segoe UI", "Microsoft YaHei", sans-serif;
@@ -33,79 +45,253 @@
     background: #fff;
     line-height: 1.75;
     -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
   }
-  .wrap { max-width: 780px; margin: 0 auto; padding: 0 22px; }
+  .wrap { max-width: 1000px; margin: 0 auto; padding: 0 24px; }
 
-  header { padding: 84px 0 56px; }
-  h1 { font-size: 34px; line-height: 1.35; margin: 0 0 16px; font-weight: 600; letter-spacing: -0.3px; }
-  .lead { font-size: 17px; color: var(--fg2); margin: 0 0 30px; }
-  .lead b { color: var(--fg); font-weight: 600; }
-  .cta { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
-  .btn {
-    display: inline-block; padding: 13px 30px; border-radius: 10px;
-    background: var(--accent); color: #fff; text-decoration: none;
-    font-size: 16px; font-weight: 600; border: 1px solid var(--accent);
-  }
-  .btn:hover { opacity: .9; }
-  .btn-ghost {
-    display: inline-block; padding: 13px 22px; border-radius: 10px;
-    border: 1px solid var(--line); color: var(--fg2); text-decoration: none; font-size: 15px;
-  }
-  .btn-ghost:hover { border-color: var(--hint); color: var(--fg); }
-  .note { font-size: 13.5px; color: var(--hint); margin-top: 16px; }
-
-  section { padding: 46px 0; border-top: 1px solid var(--line); }
-  h2 { font-size: 21px; margin: 0 0 20px; font-weight: 600; }
-  h3 { font-size: 16px; margin: 0 0 6px; font-weight: 600; }
-  p { margin: 0 0 14px; color: var(--fg2); }
-
-  .cols { display: grid; gap: 26px; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); }
-  .col p { font-size: 14.5px; margin: 0; }
-
-  .shots { display: grid; gap: 16px; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); }
-  .shots img { width: 100%; height: auto; border: 1px solid var(--line); border-radius: 12px; display: block; }
-  .cap { font-size: 13px; color: var(--hint); margin: 8px 0 0; }
-
-  ol { padding-left: 20px; margin: 0; color: var(--fg2); }
-  ol li { margin-bottom: 10px; }
-  ol b { color: var(--fg); }
-
-  ul.plain { list-style: none; padding: 0; margin: 0; }
-  ul.plain li {
-    font-size: 14.5px; color: var(--fg2); padding: 12px 0;
+  /* ── 首屏 ────────────────────────────────────────── */
+  .hero {
+    position: relative;
+    overflow: hidden;
+    padding: 80px 0 0;
+    background:
+      radial-gradient(900px 420px at 78% -8%, #dff6ec 0%, rgba(223,246,236,0) 62%),
+      radial-gradient(700px 340px at 12% 0%, #eef6ff 0%, rgba(238,246,255,0) 58%),
+      linear-gradient(180deg, #fbfefd 0%, #fff 100%);
     border-bottom: 1px solid var(--line);
   }
-  ul.plain li:last-child { border-bottom: 0; }
+  /* 首屏右上的淡网格，给"技术工具"一点气质 —— 纯 CSS，不加载图 */
+  .hero::after {
+    content: "";
+    position: absolute;
+    inset: 0 0 auto 0;
+    height: 420px;
+    background-image:
+      linear-gradient(to right, rgba(16,20,24,.045) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(16,20,24,.045) 1px, transparent 1px);
+    background-size: 44px 44px;
+    -webkit-mask-image: radial-gradient(620px 320px at 72% 0%, #000 0%, transparent 72%);
+    mask-image: radial-gradient(620px 320px at 72% 0%, #000 0%, transparent 72%);
+    pointer-events: none;
+  }
+  .hero .wrap { position: relative; z-index: 1; }
 
-  footer { padding: 40px 0 70px; border-top: 1px solid var(--line); }
-  footer p { font-size: 13.5px; color: var(--hint); margin: 0 0 8px; }
+  .eyebrow {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 6px 14px 6px 10px;
+    border-radius: 999px;
+    background: #fff;
+    border: 1px solid var(--line);
+    box-shadow: var(--shadow);
+    font-size: 13px; color: var(--fg2);
+    margin-bottom: 22px;
+  }
+  .dot {
+    width: 7px; height: 7px; border-radius: 50%;
+    background: var(--accent);
+    box-shadow: 0 0 0 3px var(--accent-soft);
+  }
 
-  .box { background: var(--soft); border-radius: 12px; padding: 20px 24px; }
+  h1 {
+    font-size: 46px; line-height: 1.22; margin: 0 0 18px;
+    font-weight: 700; letter-spacing: -.6px;
+    max-width: 15em;
+  }
+  h1 em { font-style: normal; color: var(--accent); }
+  .lead { font-size: 17.5px; color: var(--fg2); margin: 0 0 32px; max-width: 34em; }
+  .lead b { color: var(--fg); font-weight: 600; }
+
+  .cta { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+  .btn, .btn-ghost {
+    display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+    padding: 14px 28px; border-radius: 12px;
+    text-decoration: none; font-size: 15.5px; font-weight: 600;
+    transition: transform .12s ease, box-shadow .12s ease, background .12s ease;
+  }
+  .btn {
+    color: #fff;
+    background: linear-gradient(180deg, var(--accent-2), var(--accent));
+    border: 1px solid rgba(0, 0, 0, .06);
+    box-shadow: 0 6px 18px -6px rgba(14, 156, 116, .55);
+  }
+  .btn:hover { transform: translateY(-1px); box-shadow: 0 10px 24px -8px rgba(14, 156, 116, .6); }
+  .btn-ghost { color: var(--fg2); background: #fff; border: 1px solid var(--line); box-shadow: var(--shadow); }
+  .btn-ghost:hover { color: var(--fg); border-color: #cfd6dc; }
+  .btn svg { width: 17px; height: 17px; }
+  .note { font-size: 13.5px; color: var(--hint); margin-top: 16px; }
+
+  /* 首屏大截图：直接放出来，让人一眼看见"它长什么样" ✓ */
+  .hero-shot {
+    margin: 56px auto -2px;
+    max-width: 880px;
+    border-radius: var(--radius) var(--radius) 0 0;
+    overflow: hidden;
+    border: 1px solid var(--line);
+    border-bottom: 0;
+    box-shadow: var(--shadow-lg);
+    background: #fff;
+  }
+  .hero-shot img { display: block; width: 100%; height: auto; }
+  .hero-cap {
+    text-align: center; font-size: 13.5px; color: var(--hint);
+    margin: 14px 0 0;
+  }
+
+  /* ── 通用区块 ────────────────────────────────────── */
+  section { padding: 64px 0; }
+  section + section { border-top: 1px solid var(--line); }
+  h2 {
+    font-size: 26px; margin: 0 0 8px; font-weight: 700; letter-spacing: -.3px;
+  }
+  .sub { color: var(--fg2); font-size: 15.5px; margin: 0 0 30px; max-width: 40em; }
+  p { margin: 0 0 14px; color: var(--fg2); }
+
+  /* ── 特性卡 ──────────────────────────────────────── */
+  .cards { display: grid; gap: 18px; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); }
+  .card {
+    background: #fff;
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 26px 24px;
+    box-shadow: var(--shadow);
+  }
+  .ico {
+    width: 42px; height: 42px; border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    background: var(--accent-soft);
+    border: 1px solid #d6f0e6;
+    margin-bottom: 16px;
+  }
+  .ico svg { width: 21px; height: 21px; stroke: var(--accent); fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+  .card h3 { font-size: 16.5px; margin: 0 0 8px; font-weight: 650; }
+  .card p { font-size: 14.5px; margin: 0; }
+  .card p b { color: var(--fg); font-weight: 600; }
+
+  /* ── 截图 ────────────────────────────────────────── */
+  .shots { display: grid; gap: 22px; grid-template-columns: repeat(auto-fit, minmax(380px, 1fr)); }
+  /* 只放一张的时候别让它铺满，居中收窄一点更好看 ✓ */
+  .shots.one { max-width: 720px; margin: 0 auto; }
+  .shot figure { margin: 0; }
+  .shot img {
+    width: 100%; height: auto; display: block;
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    background: #fff;
+  }
+  .cap { font-size: 13.5px; color: var(--hint); margin: 12px 2px 0; }
+
+  /* ── 步骤 ────────────────────────────────────────── */
+  .steps { display: grid; gap: 16px; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); counter-reset: s; }
+  .step {
+    position: relative;
+    background: #fff;
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 24px 22px 22px;
+    box-shadow: var(--shadow);
+  }
+  .step::before {
+    counter-increment: s;
+    content: counter(s);
+    display: flex; align-items: center; justify-content: center;
+    width: 30px; height: 30px; border-radius: 50%;
+    background: var(--accent); color: #fff;
+    font-size: 14px; font-weight: 700;
+    margin-bottom: 14px;
+  }
+  .step b { color: var(--fg); font-weight: 650; }
+  .step p { font-size: 14.5px; margin: 0; }
+
+  /* ── 关于免费 ────────────────────────────────────── */
+  .box {
+    background: linear-gradient(180deg, #fbfffd, var(--accent-soft));
+    border: 1px solid #d9f2e9;
+    border-radius: var(--radius);
+    padding: 30px 32px;
+    box-shadow: var(--shadow);
+  }
+  .box p { font-size: 15px; }
   .box p:last-child { margin-bottom: 0; }
+  .box b { color: var(--fg); font-weight: 600; }
+
+  /* ── 声明 ────────────────────────────────────────── */
+  ul.plain { list-style: none; padding: 0; margin: 0; }
+  ul.plain li {
+    position: relative;
+    font-size: 14.5px; color: var(--fg2);
+    padding: 14px 0 14px 26px;
+    border-bottom: 1px solid var(--line);
+  }
+  ul.plain li::before {
+    content: ""; position: absolute; left: 6px; top: 23px;
+    width: 6px; height: 6px; border-radius: 50%;
+    background: #c9d1d8;
+  }
+  ul.plain li:last-child { border-bottom: 0; }
+  ul.plain b { color: var(--fg); font-weight: 600; }
+  code {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 13px; background: var(--soft);
+    border: 1px solid var(--line); border-radius: 6px;
+    padding: 1px 6px;
+  }
+
+  /* ── 页脚 ────────────────────────────────────────── */
+  footer {
+    border-top: 1px solid var(--line);
+    background: linear-gradient(180deg, #fff, var(--soft));
+    padding: 38px 0 56px;
+  }
+  footer p { font-size: 13.5px; color: var(--hint); margin: 0 0 6px; }
+  footer p:first-child { color: var(--fg2); font-weight: 600; }
+
+  @media (max-width: 720px) {
+    .hero { padding-top: 56px; }
+    h1 { font-size: 32px; }
+    .lead { font-size: 16px; }
+    section { padding: 48px 0; }
+    h2 { font-size: 22px; }
+    .box { padding: 24px 20px; }
+    .hero-shot { margin-top: 40px; }
+  }
 </style>
 </head>
 <body>
 
-<div class="wrap">
-
-  <header>
-    <h1>和朋友联机，不用折腾端口映射</h1>
+<div class="hero">
+  <div class="wrap">
+    <span class="eyebrow"><span class="dot"></span>Windows · 免安装 · 完全免费</span>
+    <h1>和朋友联机，<em>不用折腾</em>端口映射</h1>
     <p class="lead">
       双击就能用的小工具。它帮两台电脑<b>直接找到对方</b>，
       你们像在同一个局域网里一样联机 ——
       <b>游戏数据不经过任何服务器</b>，速度就是你俩真实的网速。
     </p>
     <div class="cta">
-      <a class="btn" href="#">下载（即将开放）</a>
+      <a class="btn" href="#">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><path d="m7 11 5 5 5-5"/><path d="M5 21h14"/></svg>
+        下载（即将开放）
+      </a>
       <a class="btn-ghost" href="#how">怎么用</a>
     </div>
-    <p class="note">Windows · 免安装 · 完全免费</p>
-  </header>
+    <div class="hero-shot">
+      <img src="shots/room.png" alt="TI 联机的房间页面，左边是成员列表，右边是日志">
+    </div>
+    <p class="hero-cap">房间里：谁进来了、连没连上，一眼看得到</p>
+  </div>
+</div>
+
+<div class="wrap">
 
   <section>
     <h2>和"内网穿透"有什么不一样</h2>
-    <div class="cols">
-      <div class="col">
+    <p class="sub">同样是"让两台电脑连上"，但数据走的路完全不同。</p>
+    <div class="cards">
+      <div class="card">
+        <div class="ico">
+          <svg viewBox="0 0 24 24"><rect x="3" y="4" width="7" height="6" rx="1.5"/><rect x="14" y="14" width="7" height="6" rx="1.5"/><path d="M10 7h3a2 2 0 0 1 2 2v5"/><path d="M10 17h4"/><path d="m12 15 2 2-2 2"/></svg>
+        </div>
         <h3>数据不走服务器</h3>
         <p>
           常见的穿透工具是<b>中转</b>：你的数据要绕一圈经过它的节点，所以免费档总是限速限量。
@@ -113,18 +299,25 @@
           之后一个字节都不经手。
         </p>
       </div>
-      <div class="col">
+      <div class="card">
+        <div class="ico">
+          <svg viewBox="0 0 24 24"><path d="M13 2 4.5 13.5H11L10 22l8.5-11.5H12z"/></svg>
+        </div>
         <h3>所以没有流量限制</h3>
         <p>
           既然是直连，速度和流量只取决于你俩自己的网络 ——
           不会用着用着突然被限速，也不会每个月卡你几个 G。
         </p>
       </div>
-      <div class="col">
-        <h3>不用注册，不用登录</h3>
+      <div class="card">
+        <div class="ico">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="3.6"/><path d="M4.5 20a7.5 7.5 0 0 1 15 0"/></svg>
+        </div>
+        <h3>要个账号（邀请码注册）</h3>
         <p>
-          没有账号系统，不收集你的信息。房主开个房间、把房间号给朋友，
-          朋友填上就能进。
+          联机本身是<b>两台电脑直连</b>，中间不需要我们做任何事；
+          要用官方的「穿透服务器」帮忙牵线，得有一个账号。
+          它只用来放行连接和事后追责 —— 游戏数据不经过服务器。
         </p>
       </div>
     </div>
@@ -132,25 +325,31 @@
 
   <section>
     <h2>界面长这样</h2>
-    <div class="shots">
-      <div>
-        <img src="shots/create.png" alt="创建房间页面">
-        <p class="cap">开房：填个端口就行，房间号自动生成</p>
-      </div>
-      <div>
-        <img src="shots/room.png" alt="房间页面，显示成员列表">
-        <p class="cap">房间里：谁进来了、连没连上，一眼看得到</p>
+    <p class="sub">界面很简单：开个房，把房间号发给朋友，剩下它自己搞定。</p>
+    <div class="shots one">
+      <div class="shot">
+        <figure>
+          <img src="shots/create.png" alt="创建房间页面">
+          <p class="cap">开房：填个端口就行，房间号自动生成</p>
+        </figure>
       </div>
     </div>
   </section>
 
   <section id="how">
     <h2>怎么用</h2>
-    <ol>
-      <li><b>房主</b>打开软件，选「创建房间」，把游戏服务端开起来，然后把这串<b>房间号</b>发给朋友。</li>
-      <li><b>朋友</b>打开同一个软件，选「加入房间」，填上房间号。</li>
-      <li>在游戏里连接提示的地址 —— 就这样，两边会直接连上。</li>
-    </ol>
+    <p class="sub">三步，两边各装一个 exe 就行。</p>
+    <div class="steps">
+      <div class="step">
+        <p><b>房主</b>打开软件，选「创建房间」，把游戏服务端开起来，然后把这串<b>房间号</b>发给朋友。</p>
+      </div>
+      <div class="step">
+        <p><b>朋友</b>打开同一个软件，选「加入房间」，填上房间号。</p>
+      </div>
+      <div class="step">
+        <p>在游戏里连接提示的地址 —— 就这样，两边会直接连上。</p>
+      </div>
+    </div>
     <p class="note">
       两边都要装这个软件（一个 exe，双击即用）。
       房主那边的游戏得先开着 —— 它是"服务器"那一端。
@@ -176,7 +375,7 @@
     <ul class="plain">
       <li>本工具是<b>非官方</b>作品，与各游戏厂商（如 Mojang）没有任何关系，也不代表或代理任何官方服务。</li>
       <li>软件内置的头像素材版权归各自原作者所有，此处仅作个人标记用途。</li>
-      <li>本工具只做点对点打洞与牵线：<b>不转发游戏数据、不存储任何内容、不提供接入服务</b>。</li>
+      <li>本工具只做点对点打洞与牵线：<b>游戏数据不在服务器中转，也不提供游戏接入服务</b>。</li>
       <li>
         联机服务器不保存聊天记录、不保存游戏数据；服务端日志里出现的地址做了打码处理
         （只保留前两段，例如 <code>120.227.*.*</code>），仅用于排查故障。
@@ -185,12 +384,14 @@
     </ul>
   </section>
 
-  <footer>
+</div>
+
+<footer>
+  <div class="wrap">
     <p>TI 联机 · 免费的点对点联机工具</p>
     <p>本页面不加载任何第三方脚本，不做任何访问统计。</p>
-  </footer>
-
-</div>
+  </div>
+</footer>
 
 </body>
 </html>
