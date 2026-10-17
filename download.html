@@ -119,6 +119,23 @@
     width: 5px; height: 5px; border-radius: 50%; background: #c9d1d8;
   }
 
+  /* 版本卡里的下载按钮：主推那个用实心，另一个用描边 */
+  .dl {
+    display: block; text-align: center; text-decoration: none;
+    margin-top: 16px; padding: 11px 16px; border-radius: 10px;
+    font-size: 14.5px; font-weight: 600;
+    background: linear-gradient(180deg, var(--accent-2), var(--accent));
+    color: #fff; border: 1px solid rgba(0, 0, 0, .06);
+    box-shadow: 0 6px 16px -8px rgba(14, 156, 116, .6);
+    transition: transform .12s, box-shadow .12s;
+  }
+  .dl:hover { transform: translateY(-1px); box-shadow: 0 10px 22px -10px rgba(14, 156, 116, .65); }
+  .dl.ghost {
+    background: #fff; color: var(--accent);
+    border: 1px solid #b9e6d6; box-shadow: none;
+  }
+  .dl.ghost:hover { background: var(--accent-soft); box-shadow: none; }
+
   /* ── 渠道 ─────────────────────────────────────── */
   .chans { display: grid; gap: 12px; }
   .chan {
@@ -239,25 +256,27 @@
           <li>自带卸载器，能在「应用和功能」里正常卸载</li>
           <li>以后升级直接装新的覆盖，不用先卸</li>
         </ul>
+        <a class="dl" href="https://links.8uid.com/d/8q8vcv1jigvc">下载安装版</a>
       </div>
 
       <div class="ver">
         <h3>绿色版</h3>
-        <span class="file">TI联机.zip</span>
-        <p class="size">5.07 MB</p>
+        <span class="file">TI联机.exe</span>
+        <p class="size">10.5 MB</p>
         <ul>
-          <li>解压出来双击就能用，不写注册表</li>
-          <li>想彻底清掉，直接删文件夹即可</li>
+          <li>单个 exe，双击就能用，不写注册表</li>
+          <li>想彻底清掉，直接删掉它就行</li>
           <li>适合放 U 盘里带着走</li>
         </ul>
+        <a class="dl ghost" href="https://links.8uid.com/d/708bezl0x76i">下载绿色版</a>
       </div>
     </div>
   </section>
 
   <!-- ══════════ 渠道 ══════════ -->
   <section>
-    <h2>下载地址</h2>
-    <p class="sub">两个版本都在同一个文件夹里，进去挑要的那个。</p>
+    <h2>其他下载方式</h2>
+    <p class="sub">上面的按钮打不开时，从这里下 —— 文件夹里还多一个打包好的 zip 版。</p>
 
     <div class="chans">
       <a class="chan" href="https://pan.quark.cn/s/40f876a211f3" target="_blank" rel="noopener noreferrer">
@@ -320,7 +339,8 @@
       <summary>展开对应版本 1.0.0 的 SHA256</summary>
       <p>Windows 上在文件所在目录打开 PowerShell，运行 <code>Get-FileHash 文件名 -Algorithm SHA256</code>，对比下面这串。</p>
       <div class="hash"><b>TI联机-安装包-1.0.0.exe</b>b7147c77853a72775f4ddd840be5ca00e1026f063c3a50aef4e646d8b751ac70</div>
-      <div class="hash"><b>TI联机.zip</b>e52bb75b97562bea80c7590fb6928999386369133521e5817d3bb708c3403a9c</div>
+      <div class="hash"><b>TI联机.exe</b>403f46ccda5141aa979cc3e3a6c25e65d036acb291ab391121dc7ec84c1d8e56</div>
+      <div class="hash"><b>TI联机.zip（夸克网盘里那个）</b>e52bb75b97562bea80c7590fb6928999386369133521e5817d3bb708c3403a9c</div>
     </details>
   </section>
 
