@@ -1,0 +1,752 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<link rel="icon" type="image/png" sizes="16x16" href="favicon-16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
+<link rel="icon" type="image/png" sizes="48x48" href="favicon-48.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TI 联机 —— 免费的点对点联机工具</title>
+<meta name="description" content="TI 联机 —— 免费的点对点联机工具：填个房间号就能让两台电脑直连，游戏数据不经过我们，双击就能用。">
+
+<!--
+  这一页的规矩（别破）：
+    · 不放任何第三方脚本、统计代码、字体外链 —— 一是不给用户添负担，二是
+      "网站收集了什么"和"软件收集了什么"是同一笔账，越少越好；
+    · 不加评论区、用户中心、在线人数 —— 那会把"一个工具页"变成"一个平台"；
+    · 不放广告、不放赞助位 —— 这个软件永远免费，不能有任何变现的口子。
+    · 图标一律**内联 SVG**，不引外部图标库（同上：不加外链）。
+
+  ✅ 下载按钮现在指向 download.html（渠道、安装包说明、拦截提示都在那一页）。
+
+  2026-10-17 改版（老板：「现在官网太丑了」⇒ 选「浅色精致卡片风」）：
+    只改呈现，**一个字的正文都没动**。改的是：首屏加渐变和层次、
+    界面截图放大并提到前面、三列特性做成带图标的卡片、
+    「怎么用」做成步骤卡、声明区卡片化。
+-->
+<script>
+  /* 🩸 这段必须在 <head> 里**同步**执行，不能等 DOMContentLoaded ——
+     否则浏览器会先按默认色画一帧，再跳成用户选的那套，闪一下 ✗
+     默认深色（跟客户端一致）；用户手动切过就记住。 */
+  (function () {
+    var t = 'dark';
+    try { t = localStorage.getItem('ti-theme') || 'dark'; } catch (e) {}
+    document.documentElement.setAttribute('data-theme', t);
+  })();
+</script>
+<style>
+  /* ── 配色：两套，默认深色 ─────────────────────────────
+     🩸 值**照抄客户端的 cmd/gui/ui/style.css**，不自己编 ——
+        这样官网和软件看起来是一家的 ✓
+        客户端深色是「深蓝紫 + 青绿」，浅色是「近白 + 靛蓝」，
+        跟官网原来那套绿色不是一回事，这次统一过来。
+     📌 默认深色用 :root，浅色用 [data-theme="light"] 覆盖。
+        切换按钮在导航栏右上角，选择记在 localStorage。 */
+  :root {
+    --bg: #171b30;          /* 页面底 */
+    --bg2: #12152a;         /* 页脚 / 内嵌块，比页面更深一档 */
+    --card: #212745;        /* 卡片 */
+    --soft: #1b2039;        /* 次级卡片（比 --card 略深） */
+    --line: #2f3556;
+    --line-soft: #272c4a;
+    --fg: #eceffa;
+    --fg2: #c3c9de;
+    --hint: #6e7795;
+    --accent: #2fe0b0;
+    --accent-fg: #08211b;   /* 青绿底上的字：白字对比度只有 1.6:1，读不清 ✗ */
+    --accent-soft: rgba(47, 224, 176, .14);
+    --warn: #e3b341;
+    --warn-soft: rgba(227, 179, 65, .12);
+    --warn-line: rgba(227, 179, 65, .34);
+    --warn-fg: #f0c860;
+    --ok: #4ade80;
+    --err: #ff7b7b;
+    --radius: 16px;
+    --shadow: none;         /* 深色下投影看不见，靠边框分层 ✓ */
+    --shadow-lg: 0 24px 60px -28px rgba(0, 0, 0, .75);
+    --hero-1: rgba(47, 224, 176, .11);
+    --hero-2: rgba(79, 70, 229, .17);
+    color-scheme: dark;     /* 让 <select>、滚动条这些原生控件也跟着暗 ✓ */
+  }
+
+  [data-theme="light"] {
+    --bg: #ffffff;
+    --bg2: #f6f7f9;
+    --card: #ffffff;
+    --soft: #f6f8f9;
+    --line: #e5e9ed;
+    --line-soft: #eff1f4;
+    --fg: #101418;
+    --fg2: #4b535c;
+    --hint: #8b939c;
+    --accent: #4f46e5;
+    --accent-fg: #ffffff;
+    --accent-soft: #eef0ff;
+    --warn: #b7791f;
+    --warn-soft: #fbf3e3;
+    --warn-line: #ecd9b0;
+    --warn-fg: #6b4a0d;
+    --ok: #12a05c;
+    --err: #d23b3b;
+    --shadow: 0 1px 2px rgba(16, 24, 40, .04), 0 8px 24px -12px rgba(16, 24, 40, .12);
+    --shadow-lg: 0 2px 4px rgba(16, 24, 40, .04), 0 24px 60px -24px rgba(16, 24, 40, .22);
+    --hero-1: #e6f7f0;
+    --hero-2: #eef6ff;
+    color-scheme: light;
+  }
+  * { box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0;
+    font-family: system-ui, -apple-system, "Segoe UI", "Microsoft YaHei", sans-serif;
+    color: var(--fg);
+    background: var(--bg);
+    line-height: 1.75;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+  .wrap { max-width: 1000px; margin: 0 auto; padding: 0 24px; }
+
+
+  /* 截图跟着主题走：深色页面配深色截图，浅色配浅色 ✓
+     🩸 用两张 img 显隐而不是 <picture> —— <picture> 的 media 只认
+        系统偏好，认不了我们自己的 data-theme ✗ */
+  /* 🩸 选择器必须写到 `.hero-shot img.only-*` 这么具体 ——
+     只写 `.only-light { display:none }` 会被 `.hero-shot img { display:block }`
+     压过去（元素选择器那点权重刚好超出），结果**两张图一起显示** ✗
+     （2026-10-19 第一次改就踩了，出图才看出来）*/
+  .hero-shot img.only-dark, .gitem img.only-dark { display: block; }
+  .hero-shot img.only-light, .gitem img.only-light { display: none; }
+  [data-theme="light"] .hero-shot img.only-dark,
+  [data-theme="light"] .gitem img.only-dark { display: none; }
+  [data-theme="light"] .hero-shot img.only-light,
+  [data-theme="light"] .gitem img.only-light { display: block; }
+
+  .gallery { display: flex; flex-direction: column; gap: 20px; }
+  .gitem {
+    margin: 0; padding: 0;
+    border: 1px solid var(--line); border-radius: var(--radius);
+    background: var(--card); overflow: hidden; box-shadow: var(--shadow);
+  }
+  .gitem img { display: block; width: 100%; height: auto; }
+  .gitem figcaption {
+    padding: 11px 16px; font-size: 13.5px; color: var(--hint);
+    border-top: 1px solid var(--line);
+  }
+  .ggrid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 20px; }
+
+  /* 最近更新：左侧竖线 + 条目 */
+  .changelog { display: flex; flex-direction: column; gap: 16px; }
+  .cl-item { display: flex; gap: 14px; align-items: baseline; }
+  .cl-item b { min-width: 8.5em; color: var(--fg); font-weight: 600; font-size: 15px; }
+  .cl-item span { color: var(--fg2); font-size: 14.5px; }
+  @media (max-width: 720px) { .cl-item { flex-direction: column; gap: 4px; } }
+
+  /* 常见问题：用 details，样式和下载页保持一致 */
+  .faq details {
+    border: 1px solid var(--line); border-radius: 12px;
+    padding: 14px 18px; margin-bottom: 10px; background: var(--card);
+  }
+  .faq summary { cursor: pointer; font-weight: 600; color: var(--fg); font-size: 15px; }
+  .faq details p { margin: 10px 0 0; color: var(--fg2); font-size: 14.5px; }
+
+  /* ── 顶部导航 ──────────────────────────────────────
+     页面变长了，没有导航只能一路滚 ✗
+     🩸 固定定位 ⇒ 首屏的 padding-top 要加上导航高度（见 .hero） */
+  .nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 50;
+    background: var(--bg);
+    border-bottom: 1px solid var(--line);
+  }
+  .nav-in { display: flex; align-items: center; gap: 20px; height: 58px; }
+  .nav-brand {
+    display: flex; align-items: center; gap: 9px;
+    font-size: 15.5px; font-weight: 700; color: var(--fg);
+    text-decoration: none; letter-spacing: .3px; white-space: nowrap;
+  }
+  .nav-brand .mark {
+    width: 20px; height: 20px; border-radius: 7px; flex: none;
+    background: var(--accent);
+  }
+  .nav-links { display: flex; align-items: center; gap: 4px; margin-left: auto; }
+  .nav-links > a {
+    padding: 7px 11px; border-radius: 9px;
+    font-size: 14px; color: var(--fg2); text-decoration: none;
+    white-space: nowrap;
+  }
+  .nav-links > a:hover { background: var(--accent-soft); color: var(--accent); }
+  .nav-dl {
+    background: var(--accent) !important; color: var(--accent-fg) !important;
+    font-weight: 600;
+  }
+  /* 主题切换：深色时显示太阳（点了变亮），浅色时显示月亮 */
+  .theme-btn {
+    display: flex; align-items: center; justify-content: center;
+    width: 34px; height: 34px; margin-left: 6px;
+    border: 1px solid var(--line); border-radius: 10px;
+    background: var(--card); color: var(--fg2);
+    cursor: pointer; padding: 0;
+  }
+  .theme-btn:hover { color: var(--accent); border-color: var(--accent); }
+  .theme-btn svg { width: 17px; height: 17px; stroke: currentColor; fill: none; stroke-width: 1.9; stroke-linecap: round; stroke-linejoin: round; }
+  .ico-sun { display: block; }
+  .ico-moon { display: none; }
+  [data-theme="light"] .ico-sun { display: none; }
+  [data-theme="light"] .ico-moon { display: block; }
+
+  @media (max-width: 720px) {
+    .nav-links > a:not(.nav-dl) { display: none; }   /* 小屏只留「下载」和切换 */
+  }
+
+
+  /* ── 首屏 ────────────────────────────────────────── */
+  .hero {
+    position: relative;
+    overflow: hidden;
+    padding: 138px 0 0;   /* 58 导航 + 80 留白 */
+    background:
+      radial-gradient(900px 420px at 78% -8%, var(--hero-1) 0%, transparent 62%),
+      radial-gradient(700px 340px at 12% 0%, var(--hero-2) 0%, transparent 58%),
+      linear-gradient(180deg, var(--bg2) 0%, var(--bg) 100%);
+    border-bottom: 1px solid var(--line);
+  }
+  /* 首屏右上的淡网格，给"技术工具"一点气质 —— 纯 CSS，不加载图 */
+  .hero::after {
+    content: "";
+    position: absolute;
+    inset: 0 0 auto 0;
+    height: 420px;
+    background-image:
+      linear-gradient(to right, rgba(16,20,24,.045) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(16,20,24,.045) 1px, transparent 1px);
+    background-size: 44px 44px;
+    -webkit-mask-image: radial-gradient(620px 320px at 72% 0%, #000 0%, transparent 72%);
+    mask-image: radial-gradient(620px 320px at 72% 0%, #000 0%, transparent 72%);
+    pointer-events: none;
+  }
+  .hero .wrap { position: relative; z-index: 1; }
+
+  /* 产品名 —— 原来整页**没有一处写「TI 联机」**，访客看完不知道这是什么东西 ✗
+     （2026-10-18 老板：「官网不太对，怎么没有 TI 联机的介绍之类的啊，连名字都没有」）*/
+  .brand {
+    display: flex; align-items: center; gap: 10px;
+    margin-bottom: 16px;
+    font-size: 18px; font-weight: 700; letter-spacing: .3px;
+    color: var(--fg);
+  }
+  .brand .mark {
+    width: 24px; height: 24px; border-radius: 8px; flex: none;
+    background: var(--accent);
+    box-shadow: 0 3px 10px -3px rgba(14, 156, 116, .55);
+  }
+
+  .eyebrow {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 6px 14px 6px 10px;
+    border-radius: 999px;
+    background: var(--card);
+    border: 1px solid var(--line);
+    box-shadow: var(--shadow);
+    font-size: 13px; color: var(--fg2);
+    margin-bottom: 22px;
+  }
+  .dot {
+    width: 7px; height: 7px; border-radius: 50%;
+    background: var(--accent);
+    box-shadow: 0 0 0 3px var(--accent-soft);
+  }
+
+  h1 {
+    font-size: 46px; line-height: 1.22; margin: 0 0 18px;
+    font-weight: 700; letter-spacing: -.6px;
+    max-width: 15em;
+  }
+  h1 em { font-style: normal; color: var(--accent); }
+  .lead { font-size: 17.5px; color: var(--fg2); margin: 0 0 32px; max-width: 34em; }
+  .lead b { color: var(--fg); font-weight: 600; }
+
+  .cta { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+  .btn, .btn-ghost {
+    display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+    padding: 14px 28px; border-radius: 12px;
+    text-decoration: none; font-size: 15.5px; font-weight: 600;
+    transition: transform .12s ease, box-shadow .12s ease, background .12s ease;
+  }
+  .btn {
+    color: var(--accent-fg);
+    background: var(--accent);
+    border: 1px solid rgba(0, 0, 0, .06);
+    box-shadow: 0 6px 18px -6px rgba(14, 156, 116, .55);
+  }
+  .btn:hover { transform: translateY(-1px); box-shadow: 0 10px 24px -8px rgba(14, 156, 116, .6); }
+  .btn-ghost { color: var(--fg2); background: var(--card); border: 1px solid var(--line); box-shadow: var(--shadow); }
+  .btn-ghost:hover { color: var(--fg); border-color: #cfd6dc; }
+  .btn svg { width: 17px; height: 17px; }
+  .note { font-size: 13.5px; color: var(--hint); margin-top: 16px; }
+
+  /* 首屏大截图：直接放出来，让人一眼看见"它长什么样" ✓ */
+  .hero-shot {
+    /* 📌 原来是"贴到区块底边"的设计（负 margin + 只圆上角）；
+       2026-10-17 加了大图下面的图注之后，那样会被分区线切掉底部 ⇒ 改成正常留白+四角圆 ✓ */
+    margin: 56px auto 22px;
+    max-width: 880px;
+    border-radius: var(--radius);
+    overflow: hidden;
+    border: 1px solid var(--line);
+    box-shadow: var(--shadow-lg);
+    background: var(--card);
+  }
+  .hero-shot img { display: block; width: 100%; height: auto; }
+  .hero-cap {
+    text-align: center; font-size: 13.5px; color: var(--hint);
+    margin: 14px 0 0;
+  }
+
+  /* ── 通用区块 ────────────────────────────────────── */
+  section { padding: 64px 0; }
+  section + section { border-top: 1px solid var(--line); }
+  h2 {
+    font-size: 26px; margin: 0 0 8px; font-weight: 700; letter-spacing: -.3px;
+  }
+  .sub { color: var(--fg2); font-size: 15.5px; margin: 0 0 30px; max-width: 40em; }
+  p { margin: 0 0 14px; color: var(--fg2); }
+
+  /* 已经配好的游戏 —— 胶囊标签 */
+  .games { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 4px; }
+  .games span {
+    padding: 8px 16px; border-radius: 999px;
+    background: var(--accent-soft); border: 1px solid #d5f0e5;
+    color: #0b7d5c; font-size: 14.5px; font-weight: 600; line-height: 1.4;
+  }
+
+  /* ── 特性卡 ──────────────────────────────────────── */
+  .cards { display: grid; gap: 18px; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); }
+  .card {
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 26px 24px;
+    box-shadow: var(--shadow);
+  }
+  .ico {
+    width: 42px; height: 42px; border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    background: var(--accent-soft);
+    border: 1px solid #d6f0e6;
+    margin-bottom: 16px;
+  }
+  .ico svg { width: 21px; height: 21px; stroke: var(--accent); fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+  .card h3 { font-size: 16.5px; margin: 0 0 8px; font-weight: 650; }
+  .card p { font-size: 14.5px; margin: 0; }
+  .card p b { color: var(--fg); font-weight: 600; }
+
+  /* ── 截图 ────────────────────────────────────────── */
+  .shots { display: grid; gap: 22px; grid-template-columns: repeat(auto-fit, minmax(380px, 1fr)); }
+  /* 只放一张的时候别让它铺满，居中收窄一点更好看 ✓ */
+  .shots.one { max-width: 720px; margin: 0 auto; }
+  .shot figure { margin: 0; }
+  .shot img {
+    width: 100%; height: auto; display: block;
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    background: var(--card);
+  }
+  .cap { font-size: 13.5px; color: var(--hint); margin: 12px 2px 0; }
+
+  /* ── 步骤 ────────────────────────────────────────── */
+  .steps { display: grid; gap: 16px; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); counter-reset: s; }
+  .step {
+    position: relative;
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 24px 22px 22px;
+    box-shadow: var(--shadow);
+  }
+  .step::before {
+    counter-increment: s;
+    content: counter(s);
+    display: flex; align-items: center; justify-content: center;
+    width: 30px; height: 30px; border-radius: 50%;
+    background: var(--accent); color: var(--accent-fg);
+    font-size: 14px; font-weight: 700;
+    margin-bottom: 14px;
+  }
+  .step b { color: var(--fg); font-weight: 650; }
+  .step p { font-size: 14.5px; margin: 0; }
+
+  /* ── 关于免费 ────────────────────────────────────── */
+  .box {
+    background: linear-gradient(180deg, var(--card), var(--accent-soft));
+    border: 1px solid #d9f2e9;
+    border-radius: var(--radius);
+    padding: 30px 32px;
+    box-shadow: var(--shadow);
+  }
+  .box p { font-size: 15px; }
+  .box p:last-child { margin-bottom: 0; }
+  .box b { color: var(--fg); font-weight: 600; }
+
+  /* ── 声明 ────────────────────────────────────────── */
+  ul.plain { list-style: none; padding: 0; margin: 0; }
+  ul.plain li {
+    position: relative;
+    font-size: 14.5px; color: var(--fg2);
+    padding: 14px 0 14px 26px;
+    border-bottom: 1px solid var(--line);
+  }
+  ul.plain li::before {
+    content: ""; position: absolute; left: 6px; top: 23px;
+    width: 6px; height: 6px; border-radius: 50%;
+    background: #c9d1d8;
+  }
+  ul.plain li:last-child { border-bottom: 0; }
+  ul.plain b { color: var(--fg); font-weight: 600; }
+  code {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 13px; background: var(--soft);
+    border: 1px solid var(--line); border-radius: 6px;
+    padding: 1px 6px;
+  }
+
+  /* ── 页脚 ────────────────────────────────────────── */
+  footer {
+    border-top: 1px solid var(--line);
+    background: linear-gradient(180deg, var(--bg), var(--bg2));
+    padding: 38px 0 56px;
+  }
+  footer p { font-size: 13.5px; color: var(--hint); margin: 0 0 6px; }
+  footer p:first-child { color: var(--fg2); font-weight: 600; }
+  /* 仓库链接 —— 开源是这个工具唯一的信任背书，值得给个显眼的颜色 ✓ */
+  footer a { color: var(--accent); text-decoration: none; font-weight: 600; }
+  footer a:hover { text-decoration: underline; }
+  /* 群号用等宽字体，一眼能认、也好抄 ✓ */
+  footer b {
+    color: var(--fg); font-weight: 700; letter-spacing: .5px;
+    font-family: ui-monospace, Consolas, "Courier New", monospace;
+  }
+
+  @media (max-width: 720px) {
+    .hero { padding-top: 56px; }
+    h1 { font-size: 32px; }
+    .lead { font-size: 16px; }
+    section { padding: 48px 0; }
+    h2 { font-size: 22px; }
+    .box { padding: 24px 20px; }
+    .hero-shot { margin-top: 40px; }
+  }
+</style>
+</head>
+<body>
+
+<header class="nav">
+  <div class="wrap nav-in">
+    <a class="nav-brand" href="#top"><span class="mark"></span>TI 联机</a>
+    <nav class="nav-links">
+      <a href="#games">能玩什么</a>
+      <a href="#why">区别</a>
+      <a href="#shots">界面</a>
+      <a href="#news">更新</a>
+      <a href="#how">怎么用</a>
+      <a href="#faq">问题</a>
+      <a class="nav-dl" href="download.html">下载</a>
+      <button class="theme-btn" onclick="toggleTheme()" aria-label="切换深浅配色" title="切换深浅配色">
+        <svg class="ico-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.4v2.2M12 19.4v2.2M4.3 4.3l1.6 1.6M18.1 18.1l1.6 1.6M2.4 12h2.2M19.4 12h2.2M4.3 19.7l1.6-1.6M18.1 5.9l1.6-1.6"/></svg>
+        <svg class="ico-moon" viewBox="0 0 24 24"><path d="M20 14.5A8.2 8.2 0 0 1 9.5 4a8.5 8.5 0 1 0 10.5 10.5Z"/></svg>
+      </button>
+    </nav>
+  </div>
+</header>
+
+<div class="hero">
+  <div class="wrap">
+    <span class="eyebrow"><span class="dot"></span>Windows 10 / 11 · 完全免费</span>
+    <h1>和朋友联机，<em>不用折腾</em>端口映射</h1>
+    <p class="lead">
+      <b>TI 联机</b>是个免费的小工具：双击打开、填个房间号，就能让两台电脑<b>直接找到对方</b>，
+      像在同一个局域网里一样联机 —— <b>游戏数据不经过我们任何服务器</b>，
+      速度就是你俩真实的网速。
+    </p>
+    <div class="cta">
+      <a class="btn" href="download.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><path d="m7 11 5 5 5-5"/><path d="M5 21h14"/></svg>
+        下载
+      </a>
+      <a class="btn-ghost" href="#how">怎么用</a>
+    </div>
+    <div class="hero-shot">
+      <img class="only-dark" src="shots/room-dark.png" alt="TI 联机的房间页面：左边是成员列表，右边是房间信息和日志">
+      <img class="only-light" src="shots/room-light.png" alt="TI 联机的房间页面：左边是成员列表，右边是房间信息和日志">
+    </div>
+    <p class="hero-cap">房间里：谁进来了、连没连上，一眼看得到</p>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <section id="games">
+    <h2>能玩哪些游戏</h2>
+    <p class="sub">
+      下面这些是<b>已经配好</b>的 —— 开房时选一下，端口和协议都替你填好了，不用自己查。
+    </p>
+    <div class="games">
+      <span>我的世界 Java 版</span>
+      <span>泰拉瑞亚</span>
+      <span>星露谷物语</span>
+      <span>饥荒联机版</span>
+      <span>幻兽帕鲁</span>
+      <span>方舟：生存进化</span>
+      <span>方舟：生存飞升</span>
+      <span>铁锈战争</span>
+      <span>像素工厂</span>
+      <span>异星工厂</span>
+      <span>七日杀</span>
+      <span>夜族崛起</span>
+      <span>生存战争</span>
+    </div>
+    <p class="sub" style="margin-top:18px;margin-bottom:0">
+      别的游戏也能用 —— 它只是在你和朋友之间开一条通道，<b>TCP 和 UDP 都支持</b>。
+      把游戏对外的那个端口号填进去就行。
+    </p>
+  </section>
+
+  <section id="why">
+    <h2>和"内网穿透"有什么不一样</h2>
+    <p class="sub">同样是"让两台电脑连上"，但数据走的路完全不同。</p>
+    <div class="cards">
+      <div class="card">
+        <div class="ico">
+          <svg viewBox="0 0 24 24"><rect x="3" y="4" width="7" height="6" rx="1.5"/><rect x="14" y="14" width="7" height="6" rx="1.5"/><path d="M10 7h3a2 2 0 0 1 2 2v5"/><path d="M10 17h4"/><path d="m12 15 2 2-2 2"/></svg>
+        </div>
+        <h3>数据不走服务器</h3>
+        <p>
+          常见的穿透工具是<b>中转</b>：你的数据要绕一圈经过它的节点，所以免费档总是限速限量。
+          这个工具是把两台电脑<b>直接接通</b> —— 服务器只负责"让你们互相知道对方在哪"，
+          之后一个字节都不经手。
+        </p>
+      </div>
+      <div class="card">
+        <div class="ico">
+          <svg viewBox="0 0 24 24"><path d="M13 2 4.5 13.5H11L10 22l8.5-11.5H12z"/></svg>
+        </div>
+        <h3>所以没有流量限制</h3>
+        <p>
+          既然是直连，速度和流量只取决于你俩自己的网络 ——
+          不会用着用着突然被限速，也不会每个月卡你几个 G。
+        </p>
+      </div>
+      <div class="card">
+        <div class="ico">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="3.6"/><path d="M4.5 20a7.5 7.5 0 0 1 15 0"/></svg>
+        </div>
+        <h3>要个账号（邀请码注册）</h3>
+        <p>
+          联机本身是<b>两台电脑直连</b>，中间不需要我们做任何事；
+          要用官方的「穿透服务器」帮忙牵线，得有一个账号。
+          它只用来放行连接和事后追责 —— 游戏数据不经过服务器。
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section id="shots">
+    <h2>界面长这样</h2>
+    <p class="sub">下面这些就是打开软件看到的，不是设计稿。深浅两套配色跟着系统走，也能在右上角手动切。</p>
+    <div class="gallery">
+      <figure class="gitem">
+        <img class="only-dark" src="shots/create-dark.png" alt="创建房间页面">
+        <img class="only-light" src="shots/create-light.png" alt="创建房间页面">
+        <figcaption>开房：选游戏、填端口，房间号自动生成</figcaption>
+      </figure>
+      <div class="ggrid">
+      <figure class="gitem">
+        <img class="only-dark" src="shots/games-dark.png" alt="选择游戏页面">
+        <img class="only-light" src="shots/games-light.png" alt="选择游戏页面">
+        <figcaption>选游戏：13 个配好的，点一下端口就填上了</figcaption>
+      </figure>
+      <figure class="gitem">
+        <img class="only-dark" src="shots/player-dark.png" alt="玩家视角的房间页面">
+        <img class="only-light" src="shots/player-light.png" alt="玩家视角的房间页面">
+        <figcaption>朋友那边：输房间号进来，连没连上一眼看到</figcaption>
+      </figure>
+      <figure class="gitem">
+        <img class="only-dark" src="shots/settings-dark.png" alt="设置页面">
+        <img class="only-light" src="shots/settings-light.png" alt="设置页面">
+        <figcaption>设置：端口、配色、开机启动都在这儿</figcaption>
+      </figure>
+      <figure class="gitem">
+        <img class="only-dark" src="shots/help-dark.png" alt="帮助页面">
+        <img class="only-light" src="shots/help-light.png" alt="帮助页面">
+        <figcaption>帮助：每个游戏怎么开房，图文一步步来</figcaption>
+      </figure>
+      </div>
+    </div>
+  </section>
+
+  <section id="news">
+    <h2>最近更新</h2>
+    <p class="sub">1.0.1 · 2026-10-19</p>
+    <div class="changelog">
+      <div class="cl-item"><b>断线自动重连</b><span>网络抖一下不再把房间整个结束，会自己重连（2/4/8/16/20 秒退避）</span></div>
+      <div class="cl-item"><b>修好打洞重试</b><span>换端口重试那一步之前拿不到对方地址，第二轮必然失败 —— 现在修好了</span></div>
+      <div class="cl-item"><b>打洞失败说清楚</b><span>会告诉你谁缺 IPv6、缺的是地址不是开关，不再丢一句「换成 IPv6 再试」</span></div>
+      <div class="cl-item"><b>连接状态分三档</b><span>正在连接（灰）/ 已连上（绿）/ 没连上（红）—— 不再一上来就红字吓人</span></div>
+    </div>
+  </section>
+
+  <section id="how">
+    <h2>怎么用</h2>
+    <p class="sub">三步，两边各装一个 exe 就行。</p>
+    <div class="steps">
+      <div class="step">
+        <p><b>房主</b>打开软件，选「创建房间」，把游戏服务端开起来，然后把这串<b>房间号</b>发给朋友。</p>
+      </div>
+      <div class="step">
+        <p><b>朋友</b>打开同一个软件，选「加入房间」，填上房间号。</p>
+      </div>
+      <div class="step">
+        <p>在游戏里连接提示的地址 —— 就这样，两边会直接连上。</p>
+      </div>
+    </div>
+    <p class="note">
+      两边都要装这个软件（一个 exe，双击即用）。
+      房主那边的游戏得先开着 —— 它是"服务器"那一端。
+    </p>
+  </section>
+
+  <section>
+    <h2>关于免费</h2>
+    <div class="box">
+      <p>
+        这个软件是作者自己联机玩的时候顺手做出来的，<b>不收费、不卖会员、没有广告</b>，
+        以后也不会变成那样。
+      </p>
+      <p>
+        唯一的要求是别拿它去干不该干的事。因为它不转发数据，本身也没有什么可"薅"的东西；
+        但既然挂着自己的名字，还是希望它干干净净的。
+      </p>
+    </div>
+  </section>
+
+  <section id="faq" class="faq">
+    <h2>常见问题</h2>
+    <p class="sub">大部分问题这里都有答案。实在不行加群问。</p>
+    <details>
+      <summary>连不上怎么办？</summary>
+      <p>先看软件给的提示，它会说明卡在哪一步：<br>
+        · <b>「对方没探到公网地址」</b>—— 对方的网络把 UDP 挡住了（公司网、校园网、运营商大内网），只能换个网络；<br>
+        · <b>「他有公网 IPv6，你这边没有」</b>—— 他的 IPv4 打不通（对称型 NAT），IPv6 是他唯一的路，而你接不住。你换一个能拿到 IPv6 的网络（手机热点常常有）；<br>
+        · <b>「两边都没问题但就是不通」</b>—— 双方都退出 VPN / 游戏加速器再试；还不行就让一个人开热点，两边都连这个热点，同一网络必定能通。</p>
+    </details>
+    <details>
+      <summary>为什么第一次运行弹「Windows 已保护你的电脑」？</summary>
+      <p>因为没有买代码签名证书 —— 一年要几千块，而这是个免费、一个人维护的工具。弹窗只看「有没有签名」，不代表检测到病毒。<br>
+        点<b>「更多信息」→「仍要运行」</b>就行。下载页有带图的说明。</p>
+    </details>
+    <details>
+      <summary>需要两个人都装吗？</summary>
+      <p>要。一边装、一边不装是连不上的 —— 隧道两端都得有这个客户端。</p>
+    </details>
+    <details>
+      <summary>要注册账号吗？</summary>
+      <p>要，但很轻：填个邮箱收验证码就行，<b>不用设密码</b>。账号只用来放行连接和事后追责，游戏数据不经过服务器。</p>
+    </details>
+    <details>
+      <summary>速度怎么样？会限速吗？</summary>
+      <p>不限速。打洞成功之后是两台电脑<b>直连</b>，速度就是你们俩之间的真实网速 —— 服务器只交换了几十个字节的地址，没有能力给你限速。<br>
+        连不上时会明确告诉你，不会假装在连。</p>
+    </details>
+    <details>
+      <summary>能不能玩 XXX 游戏？</summary>
+      <p>它本质是条通道，<b>TCP 和 UDP 都支持</b>。13 个常见游戏已经配好端口，其余的选「自定义」手动填端口就行。</p>
+    </details>
+    <details>
+      <summary>32 位的 Windows 能用吗？</summary>
+      <p>不能，只提供 64 位版本。现在的 Windows 10 / 11 基本都是 64 位。</p>
+    </details>
+    <details>
+      <summary>卸载干净吗？</summary>
+      <p>安装版在「设置 → 应用」里卸载即可；绿色版直接删文件夹。<br>
+        它在 <code>%AppData%\p2plink</code> 里存登录状态和设置，想彻底清干净就把那个目录也删掉。</p>
+    </details>
+  </section>
+
+  <section id="about">
+    <h2>关于这个项目</h2>
+    <p class="sub">一个人做的，免费，开源。</p>
+    <div class="cards">
+      <div class="card">
+        <h3>技术栈</h3>
+        <p>
+          <b>Go</b> 写的核心，界面用系统自带的 <b>WebView2</b> 渲染（所以安装包很小）；
+          隧道走 <b>KCP + smux</b>，TCP 和 UDP 分流；密钥用 <b>临时 ECDH</b> 协商 ——
+          服务器只转发公钥，算不出会话密钥。
+        </p>
+      </div>
+      <div class="card">
+        <h3>开源</h3>
+        <p>
+          <b>GPL-3.0</b>。代码在 Gitee 和 GitHub 上都能翻 ——
+          一个要开你端口、要和你朋友的电脑建立直连的工具，凭什么让人信，只有这一条路。
+        </p>
+      </div>
+      <div class="card">
+        <h3>谁在做</h3>
+        <p>
+          一个人，业余时间。没有公司、没有广告、没有会员。
+          用着有问题可以加官方群 <b>1107103581</b>，或者直接开 issue。
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>声明</h2>
+    <ul class="plain">
+      <li>本工具是<b>非官方</b>作品，与各游戏厂商（如 Mojang）没有任何关系，也不代表或代理任何官方服务。</li>
+      <li>软件内置的头像素材版权归各自原作者所有，此处仅作个人标记用途。</li>
+      <li>本工具只做点对点打洞与牵线：<b>游戏数据不在服务器中转，也不提供游戏接入服务</b>。</li>
+      <li>
+        联机服务器不保存聊天记录、不保存游戏数据；服务端日志里出现的地址做了打码处理
+        （只保留前两段，例如 <code>120.227.*.*</code>），仅用于排查故障。
+      </li>
+      <li>
+        <b>房间记录会保留 30 天</b>：房间号、开的是哪款游戏、谁开的（账号与昵称）、
+        谁在什么时候进来和离开。只用于排查故障和处理举报，<b>不记 IP、不记聊天、不记游戏内容</b>，
+        超过 30 天自动删除。
+      </li>
+      <li>请遵守你所用游戏的服务条款，仅与自己的朋友联机游玩。</li>
+    </ul>
+  </section>
+
+</div>
+
+<footer>
+  <div class="wrap">
+    <p>TI 联机 · 免费的点对点联机工具</p>
+    <p>本页面不加载任何第三方脚本，不做任何访问统计。</p>
+    <!-- 🩸 这个软件要开端口、要和陌生人的电脑建立直连、要转发游戏数据 ——
+         开源是最强的信任背书，比买签名证书划算得多，别把这一行删了 ✓ -->
+    <p>源代码（GPL-3.0）：
+      <a href="https://gitee.com/ctsq/ti-link" target="_blank" rel="noopener noreferrer">Gitee</a>
+      ·
+      <a href="https://github.com/TinyAII/ti-link" target="_blank" rel="noopener noreferrer">GitHub</a>
+      —— 觉得哪里可疑，自己翻代码。
+    </p>
+    <p>官方 QQ 群：<b>1107103581</b></p>
+  </div>
+</footer>
+
+<script>
+  function toggleTheme() {
+    var cur = document.documentElement.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
+    document.documentElement.setAttribute('data-theme', cur);
+    try { localStorage.setItem('ti-theme', cur); } catch (e) {}
+  }
+</script>
+</body>
+</html>

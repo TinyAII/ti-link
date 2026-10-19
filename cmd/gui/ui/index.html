@@ -1,0 +1,1364 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="__THEME__">
+<head>
+<meta charset="utf-8">
+<title>TI 联机</title>
+<style>
+__CSS__
+</style>
+</head>
+<body data-logged-in="__LOGGED_IN__" data-login-base="__LOGIN_BASE__">
+<div class="app">
+
+  <aside class="sidebar">
+    <div class="side-brand">
+      <span class="logo">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+          <rect x="5" y="6.5" width="9.6" height="3"/><rect x="8.3" y="6.5" width="3" height="11"/><rect x="16" y="6.5" width="3" height="11"/>
+        </svg>
+      </span>
+      <span class="name">TI 联机</span>
+    </div>
+
+    <button class="nav-item" data-nav="profile">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="8" r="3.6"/><path d="M4.6 20c0-3.6 3.3-5.7 7.4-5.7s7.4 2.1 7.4 5.7"/>
+      </svg>
+      个人信息
+    </button>
+    <button class="nav-item active" data-nav="games">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+        <circle cx="6" cy="12" r="2.4"/><circle cx="18" cy="6" r="2.4"/><circle cx="18" cy="18" r="2.4"/>
+        <path d="M8.2 10.8l7.6-3.4M8.2 13.2l7.6 3.4"/>
+      </svg>
+      联机
+    </button>
+    <button class="nav-item" data-nav="settings">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="12" r="3"/>
+        <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+      </svg>
+      设置
+    </button>
+    <button class="nav-item" data-nav="netcheck">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M3 12h3.5L9 5l4.5 14L16 12h5"/>
+      </svg>
+      网络自检
+    </button>
+    <button class="nav-item" data-nav="help">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="12" r="9"/><path d="M9.5 9a2.5 2.5 0 1 1 3 2.4c-.5.2-.5.6-.5 1.1M12 16h.01"/>
+      </svg>
+      帮助
+    </button>
+    <button class="nav-item" data-nav="about">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8h.01"/>
+      </svg>
+      关于
+    </button>
+    <button class="nav-item" data-nav="author">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="8" r="3.5"/><path d="M4.5 20a7.5 7.5 0 0 1 15 0"/>
+      </svg>
+      关于作者
+    </button>
+
+    <div class="side-foot">v1.0.1<br>免费 · 无广告</div>
+  </aside>
+
+  <div class="content">
+    <div class="topbar" id="topbar">
+      <div class="topright">
+        <button class="themebtn" id="themeBtn" title="切换深浅色">
+          <span id="themeIcon"></span>
+          <span id="themeLabel">深色</span>
+        </button>
+        <!-- 窗口按钮：窗口是无边框的，这两个是页面自己画的。
+             没有最大化按钮 —— 双击顶栏就能最大化/还原。 -->
+        <div class="winbtns">
+          <button class="winbtn" id="btnMin" title="最小化" aria-label="最小化">
+            <svg width="11" height="11" viewBox="0 0 11 11" fill="none" stroke="currentColor" stroke-width="1.1"><path d="M1 5.5h9"/></svg>
+          </button>
+          <button class="winbtn close" id="btnClose" title="关闭" aria-label="关闭">
+            <svg width="11" height="11" viewBox="0 0 11 11" fill="none" stroke="currentColor" stroke-width="1.1"><path d="M1.3 1.3l8.4 8.4M9.7 1.3L1.3 9.7"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 面包屑单独一行：跟窗口按钮挤在一处看着乱 -->
+    <div class="crumbbar">
+      <span class="crumb" id="crumb"></span>
+    </div>
+
+    <main>
+      <!-- ============ 登录 / 注册 ============
+           没登录的时候**只显示这一页**（侧边栏那些导航会被藏起来，见 style.css 的 body.gated）。
+           做成"整屏一页"而不是"能跳过去的某一页"，是为了不给自己留洞：
+           少一个入口就少一处"忘了挡" ✗ -->
+      <section id="page-login" class="page">
+        <div class="loginwrap">
+          <div class="logincard">
+            <div class="loginbrand">
+              <span class="logo">
+                <svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                  <rect x="5" y="6.5" width="9.6" height="3"/><rect x="8.3" y="6.5" width="3" height="11"/><rect x="16" y="6.5" width="3" height="11"/>
+                </svg>
+              </span>
+              <span class="name">TI 联机</span>
+            </div>
+
+            <!-- 登录 -->
+            <div id="pane-login">
+              <h1>登录</h1>
+
+              <!-- 两种登法二选一。📌 邮箱那个框**两边共用** ——
+                   分两个框的话，切一下 tab 就得重打一遍邮箱，很烦 ✓ -->
+              <div class="logintabs" id="loginTabs" data-mode="pass">
+                <!-- 那块会滑的"底"：它铺在两个按钮**背后**，
+                     按钮自己不带背景 ⇒ 切换时看着是它滑过去，不是瞬间跳 ✓ -->
+                <span class="ltpill" aria-hidden="true"></span>
+                <button class="ltab on" data-lt="pass" type="button">密码登录</button>
+                <button class="ltab" data-lt="code" type="button">验证码登录</button>
+              </div>
+
+              <label class="fld">邮箱
+                <input id="loginEmail" type="email" autocomplete="username" placeholder="你的邮箱">
+              </label>
+              <label class="fld" id="ltPassBox">密码
+                <input id="loginPass" type="password" autocomplete="current-password" placeholder="至少 8 位">
+              </label>
+              <label class="fld" id="ltCodeBox" hidden>验证码
+                <span class="coderow">
+                  <input id="loginCode" type="text" inputmode="numeric" autocomplete="one-time-code"
+                         maxlength="6" placeholder="6 位数字">
+                  <button class="codesend" id="btnSendLoginCode" type="button">获取验证码</button>
+                </span>
+              </label>
+
+              <p class="loginmsg" id="loginMsg"></p>
+              <button class="loginbtn" id="loginBtn">登录</button>
+              <p class="loginalt">还没有账号？<a href="#" id="toSignup">注册</a>　·　<a href="#" id="toReset">忘记密码？</a></p>
+            </div>
+
+            <!-- 注册 -->
+            <div id="pane-signup" hidden>
+              <h1>注册</h1>
+              <p class="loginsub" id="suSub">邀请码是私发的，不是谁都能注册</p>
+              <label class="fld">邀请码<span id="suCodeHint" class="fldhint"></span>
+                <input id="suCode" type="text" autocomplete="off" placeholder="XXXXX-XXXXX">
+              </label>
+              <label class="fld">邮箱
+                <input id="suEmail" type="email" autocomplete="username" placeholder="QQ / 网易 邮箱">
+              </label>
+              <!-- 邮箱验证码：证明这个邮箱真是他的。
+                   📌 顺序上邀请码要在前面 —— 服务器那边"发验证码"会先验邀请码，
+                      没码的请求一封都不发（不然这接口就成了对外群发机）✓ -->
+              <label class="fld">验证码
+                <span class="coderow">
+                  <input id="suMailCode" type="text" inputmode="numeric" autocomplete="one-time-code"
+                         maxlength="6" placeholder="6 位数字">
+                  <button class="codesend" id="btnSendSuCode" type="button">获取验证码</button>
+                </span>
+              </label>
+              <label class="fld">密码
+                <input id="suPass" type="password" autocomplete="new-password" placeholder="至少 8 位">
+              </label>
+              <p class="loginhint">自己设一个密码（8 位以上）。以后用密码或验证码都能登录。</p>
+              <p class="loginmsg" id="suMsg"></p>
+              <button class="loginbtn" id="suBtn">注册并登录</button>
+              <p class="loginalt">已经有账号？<a href="#" id="toLogin">去登录</a></p>
+            </div>
+
+            <!-- 找回密码（2026-10-17 加）
+                 📌 跟注册页长得像，但**没有邀请码那一栏** —— 老账号不需要码 ✓ -->
+            <div id="pane-reset" hidden>
+              <h1>找回密码</h1>
+              <p class="loginsub">给你注册时用的邮箱发个验证码，验过就能设新密码</p>
+              <label class="fld">邮箱
+                <input id="rsEmail" type="email" autocomplete="username" placeholder="注册时用的邮箱">
+              </label>
+              <label class="fld">验证码
+                <span class="coderow">
+                  <input id="rsCode" type="text" inputmode="numeric" autocomplete="one-time-code"
+                         maxlength="6" placeholder="6 位数字">
+                  <button class="codesend" id="btnSendRsCode" type="button">获取验证码</button>
+                </span>
+              </label>
+              <label class="fld">新密码
+                <input id="rsPass" type="password" autocomplete="new-password" placeholder="至少 8 位">
+              </label>
+              <p class="loginhint">改完会<strong>踢掉这个账号的所有登录</strong>（包括别的电脑）。</p>
+              <p class="loginmsg" id="rsMsg"></p>
+              <button class="loginbtn" id="rsBtn">改密码</button>
+              <p class="loginalt">想起来了？<a href="#" id="toLogin2">去登录</a></p>
+            </div>
+          </div>
+        </div>
+      </section>
+      <!-- ============ 个人信息 ============ -->
+      <section id="page-profile" class="page">
+        <div class="pagehead">
+          <div>
+            <h2>个人信息</h2>
+            <p class="sub">这些只存在你这台电脑上，不会上传</p>
+          </div>
+        </div>
+
+        <!-- 账号：它是**根** —— 昵称和头像都是这台电脑上的标记，
+             「你是谁」这件事在账号上（也是能被停用、能追责的那个） -->
+        <div class="card">
+          <div class="accrow">
+            <div>
+              <div class="acclbl">账号</div>
+              <div class="accmail" id="accEmail">—</div>
+            </div>
+            <button id="btnLogout" class="btn sm">退出登录</button>
+          </div>
+          <p class="tip">
+            账号只用来决定<b>谁能连服务器</b>；游戏数据是两台电脑之间直连的，不经过服务器。
+          </p>
+        </div>
+
+        <div class="card">
+          <div class="profhead">
+            <span class="avatar lg" id="profAvatar">?</span>
+            <div class="proffields">
+              <span class="lbl">你的昵称</span>
+              <!-- 只读 + 「换一个」：名字只能从词库里摇出来。
+                   放开自由输入的话，填什么字都要算在服务器主人头上 ✗
+                   （服务端也有一道，见 cmd/signal 的 sanitizeLabel） -->
+              <div class="nickrow">
+                <span class="nickval" id="profNick"></span>
+                <button id="btnRollNick" class="btn sm">换一个</button>
+              </div>
+            </div>
+          </div>
+          <p class="tip">
+            名字是<b>随机给你的</b>，不满意就点「换一个」。
+            房主和朋友都会在成员列表里看到它。
+          </p>
+          <p class="tip">
+            已经在房间里的话，换完要等<b>下次加入</b>才生效 —— 名字在进房间的那一刻就报给房主了。
+          </p>
+        </div>
+
+        <div class="card">
+          <div class="avhead">
+            <span class="lbl">头像</span>
+            <span class="avhint">点一下即换 · 只能用内置的，不能上传</span>
+          </div>
+          <div class="avtabs" id="avTabs"></div>
+          <div id="avGrids"></div>
+        </div>
+      </section>
+
+      <!-- ============ 选游戏 ============ -->
+      <section id="page-games" class="page active">
+        <div class="pagehead">
+          <div>
+            <h2>选择要联机的游戏</h2>
+            <p class="sub">选好之后，再决定是你开房间还是加入别人的房间</p>
+          </div>
+        </div>
+        <div class="grid" id="gameGrid"></div>
+      </section>
+
+      <!-- ============ 选操作 ============ -->
+      <section id="page-mode" class="page">
+        <button class="back" data-back="games">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+          换个游戏
+        </button>
+        <div class="pagehead">
+          <div>
+            <h2 id="modeGameName">游戏</h2>
+            <p class="sub">你要开房间，还是加入别人的？</p>
+          </div>
+        </div>
+        <div class="choice">
+          <button class="card-btn" id="pickCreate">
+            <span class="ico">
+              <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M3 20V10l9-6 9 6v10"/><path d="M9 20v-6h6v6"/>
+              </svg>
+            </span>
+            <span><span class="t1">创建房间</span><br><span class="t2">我来开游戏，把房间 ID 发给朋友</span></span>
+          </button>
+          <button class="card-btn" id="pickJoin">
+            <span class="ico">
+              <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M10 13a5 5 0 0 0 7 0l3-3a5 5 0 0 0-7-7l-1 1"/>
+                <path d="M14 11a5 5 0 0 0-7 0l-3 3a5 5 0 0 0 7 7l1-1"/>
+              </svg>
+            </span>
+            <span><span class="t1">加入房间</span><br><span class="t2">朋友开了游戏，我输房间 ID 连过去</span></span>
+          </button>
+        </div>
+      </section>
+
+      <!-- ============ 创建房间 ============ -->
+      <section id="page-create" class="page">
+        <button class="back" data-back="mode">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+          返回
+        </button>
+
+        <div class="pagehead">
+          <div>
+            <h2>创建房间</h2>
+            <p class="sub">先开游戏，填好端口，把房间 ID 发给朋友</p>
+          </div>
+          <div class="pagehead-right">
+            <button class="helpbtn" id="goTutorial">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="9"/><path d="M9.5 9a2.5 2.5 0 1 1 3 2.4c-.5.2-.5.6-.5 1.1M12 16h.01"/>
+              </svg>
+              不会？点我查看
+            </button>
+          </div>
+        </div>
+
+        <div class="step">
+          <div class="stepnum">1</div>
+          <div class="stepbody">
+            <div class="steptitle">填好信息，创建房间</div>
+            <!-- 四个字段放同一个网格里：两行共用同一条分隔线。
+                 原来是"第一行 w-md+w-sm、第二行两个 w-md"，两条线差出两百像素，
+                 看着就是不齐 —— 这就是排版不好看的原因。 -->
+            <div class="formgrid">
+              <div class="field">
+                <label class="lbl" for="port">游戏端口</label>
+                <input id="port" class="input" value="25565">
+              </div>
+              <div class="field">
+                <label class="lbl" for="maxSize">人数上限（含你）</label>
+                <input id="maxSize" class="input" value="4">
+              </div>
+
+              <!-- 🩸 只有**双端口游戏**才显示（饥荒洞穴 / 方舟 7778 / 七日杀 26901 / 夜族 27016）
+                   默认填 GAMES.extraPort，用户改过主端口时可以跟着改 ✓
+                   别的游戏（单端口）这里一直 hidden，不占位也不增加噪音 ✓ -->
+              <div class="field" id="extraPortField" hidden>
+                <label class="lbl" for="extraPort">额外端口（第二个）</label>
+                <input id="extraPort" class="input" value="">
+              </div>
+              <div class="field">
+                <span class="lbl">你的身份</span>
+                <div class="ident">
+                  <span class="avatar" id="identCreateAv">?</span>
+                  <span class="identname" id="identCreateName">未设置昵称</span>
+                  <button type="button" class="mini" data-goto="profile">修改</button>
+                </div>
+              </div>
+              <div class="field">
+                <label class="lbl" for="roomPass">房间密码（选填）</label>
+                <input id="roomPass" class="input" type="text" maxlength="32" placeholder="留空则不设密码">
+              </div>
+            </div>
+            <p class="tip">设了密码的话，把<b>房间 ID 和密码一起</b>发给朋友；不设就只发房间 ID。</p>
+            <div class="btns">
+              <button id="btnCreate" class="btn primary">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
+                创建房间
+              </button>
+              <button id="btnStopCreate" class="btn" disabled>停止</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ 加入房间 ============ -->
+      <section id="page-join" class="page">
+        <button class="back" data-back="mode">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+          返回
+        </button>
+
+        <div class="pagehead">
+          <div>
+            <h2>加入房间</h2>
+            <p class="sub">找房主要一个房间 ID</p>
+          </div>
+          <div class="pagehead-right">
+            <button class="helpbtn" id="goTutorialJoin">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="9"/><path d="M9.5 9a2.5 2.5 0 1 1 3 2.4c-.5.2-.5.6-.5 1.1M12 16h.01"/>
+              </svg>
+              不会？点我查看
+            </button>
+          </div>
+        </div>
+
+        <div class="step">
+          <div class="stepnum">1</div>
+          <div class="stepbody">
+            <div class="steptitle">输入房主给你的房间 ID</div>
+            <div class="formgrid">
+              <div class="field full">
+                <input id="codeInput" class="input" placeholder="比如 TI123456DY" style="font-family:ui-monospace,Consolas,monospace;letter-spacing:2px">
+              </div>
+              <div class="field">
+                <span class="lbl">你的身份</span>
+                <div class="ident">
+                  <span class="avatar" id="identJoinAv">?</span>
+                  <span class="identname" id="identJoinName">未设置昵称</span>
+                  <button type="button" class="mini" data-goto="profile">修改</button>
+                </div>
+              </div>
+              <div class="field">
+                <label class="lbl" for="roomPassJoin">房间密码</label>
+                <input id="roomPassJoin" class="input" type="password" maxlength="32" placeholder="房主没设密码就留空">
+              </div>
+            </div>
+            <div class="btns">
+              <button id="btnJoin" class="btn primary">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+                加入房间
+              </button>
+              <button id="btnStopJoin" class="btn" disabled>停止</button>
+            </div>
+          </div>
+        </div>
+
+        <div id="noticeBar" class="notice"></div>
+      </section>
+
+      <!-- ============ 房间（创建 / 加入成功后进这里） ============ -->
+      <section id="page-room" class="page">
+        <!-- 打洞没打通时露出来：**不退出房间**，人留在这儿才能复制日志（老板 2026-10-18） -->
+        <div class="roomfail" id="roomFailBar" hidden>
+          <div class="roomfailtext">
+            <b id="roomFailTitle">没连上房主</b>
+            <span id="roomFailMsg"></span>
+          </div>
+          <div class="setbtns">
+            <button class="btn sm" id="btnExportOnFail">导出日志</button>
+            <button class="btn sm primary" id="btnRetryJoin">重新连接</button>
+          </div>
+        </div>
+
+        <!-- 断线自动重连（2026-10-18）：这跟上面那条**不是一回事** ——
+             上面那条要用户自己点重试，这条是我们自己在悄悄试，成了就变绿收掉 ✓ -->
+        <div class="roomretry" id="roomRetryBar" hidden>
+          <span class="roomretrydot"></span>
+          <span id="roomRetryMsg"></span>
+          <button class="btn sm" id="btnCancelRetry">停止重连</button>
+        </div>
+
+        <div class="roomwrap">
+
+          <aside class="roomside">
+            <div class="roomcard">
+              <!-- 封面跟着选的游戏换（用 CSS 类，图在 style.css 里）——
+                   原来这里是写死的一张我的世界封面，选泰拉瑞亚也照旧 ✗ -->
+              <div class="roomcover" id="roomCoverBox"></div>
+              <div class="roombody">
+                <div class="roomgame" id="roomGame"></div>
+
+                <div class="roomfield">
+                  <span class="rk">房间 ID</span>
+                  <span class="rv mono" id="roomID">------</span>
+                  <button class="mini" id="copyRoomID">复制</button>
+                </div>
+                <div class="roomfield">
+                  <span class="rk">连接地址</span>
+                  <span class="rv mono" id="roomAddr">—</span>
+                  <button class="mini" id="copyRoomAddr">复制</button>
+                </div>
+                <!-- 房间密码只有房主看得见：朋友自己刚填过，再摆一行纯属噪音 -->
+                <div class="roomfield" id="passField" hidden>
+                  <span class="rk">房间密码</span>
+                  <span class="rv mono" id="roomPassShow">未设置</span>
+                  <button class="mini" id="copyRoomPass">复制</button>
+                </div>
+
+                <div class="roomacts">
+                  <button class="btn primary" id="btnRoomMain">关闭房间</button>
+                  <button class="iconbtn" id="btnRoomMenu" title="更多操作">≡</button>
+                </div>
+                <div class="roommenu" id="roomMenu" hidden>
+                  <button data-room-act="pass">修改房间密码</button>
+                  <button data-room-act="ban">管理黑名单</button>
+                </div>
+              </div>
+            </div>
+
+            <div class="memcard">
+              <div class="memhead">成员 <span id="memCount2">(1 / 4)</span></div>
+              <div id="memList2"></div>
+            </div>
+          </aside>
+
+          <div class="roommain">
+            <div class="roomtabs">
+              <button class="rtab active" data-rt="info">房间信息</button>
+              <button class="rtab" data-rt="notice">房间告知</button>
+              <button class="rtab" data-rt="log">运行日志</button>
+              <span class="rspacer"></span>
+              <span class="rstate" id="roomState">未开始</span>
+            </div>
+
+            <div class="roompane active" id="pane-info">
+              <div class="infolist">
+                <!-- 游戏服务端在不在 —— 只有房主需要看（朋友那边不用开服务端）。
+                     绿=连上（常亮）、红=连不上（呼吸闪烁，提醒去把服务端开起来）。 -->
+                <div class="inforow" id="infoServerRow" hidden>
+                  <!-- 标签按角色变：房主是「游戏服务端」（本机那台开了没），
+                       玩家是「游戏连接」（自己的游戏连上房间没）—— 两件事不一样，
+                       所以不能共用一句话。见 app.js 的 enterRoom / setServerState。 -->
+                  <span class="ik" id="infoServerLabel">游戏服务端</span>
+                  <span class="iv" id="infoServerState">
+                    <span class="srvdot" id="infoServerDot"></span><span id="infoServerText">—</span>
+                  </span>
+                  <button class="helpbtn" data-goto="tutorial">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                      <circle cx="12" cy="12" r="9"/><path d="M9.5 9a2.5 2.5 0 1 1 3 2.4c-.5.2-.5.6-.5 1.1M12 16h.01"/>
+                    </svg>
+                    不会？点我查看
+                  </button>
+                </div>
+                <div class="inforow">
+                  <span class="ik">房间 ID</span>
+                  <span class="iv mono" id="infoRoomID">------</span>
+                  <button class="mini" id="copyInfoRoomID">复制</button>
+                </div>
+                <div class="inforow">
+                  <span class="ik">连接地址</span>
+                  <span class="iv mono" id="infoRoomAddr">—</span>
+                  <button class="mini" id="copyInfoRoomAddr">复制</button>
+                </div>
+                <!-- 连接状况（2026-10-18）：连上之后才有内容，每 2 秒刷一次。
+                     📌 老板要求放这里、按行列出 —— 挤在左上角小卡片里看不全 ✗ -->
+                <div class="inforow" id="infoLiveRow" hidden>
+                  <span class="ik">连接方式</span>
+                  <span class="iv" id="infoLiveWay">直连</span>
+                </div>
+                <div class="inforow" id="infoRttRow" hidden>
+                  <span class="ik">延迟</span>
+                  <span class="iv" id="infoRtt">—</span>
+                </div>
+                <div class="inforow" id="infoLossRow" hidden>
+                  <span class="ik">丢包</span>
+                  <span class="iv" id="infoLoss">—</span>
+                </div>
+                <div class="inforow" id="infoPassRow" hidden>
+                  <span class="ik">房间密码</span>
+                  <span class="iv mono" id="infoRoomPass">未设置</span>
+                  <button class="mini" id="copyInfoRoomPass">复制</button>
+                </div>
+              </div>
+            </div>
+
+            <div class="roompane" id="pane-notice">
+              <div class="noticeblock">
+                <h4>房主</h4>
+                <p>游戏要在<strong>你这边先开起来</strong>，朋友才连得上。</p>
+                <!-- 下面三条的文案跟着游戏变：从 GAMES 里渲染进来 ——
+                     以后加游戏只要加一条数据，这儿不用动 ✓ -->
+                <p id="noticePort"></p>
+                <p>防火墙别拦游戏端口，不然朋友进来会报「连接被拒绝」。</p>
+              </div>
+              <div class="noticeblock">
+                <h4>所有人</h4>
+                <p id="noticeVersion"></p>
+                <p>房间开着的时候<strong>这个窗口别关</strong>，关了就断线了。</p>
+                <p>建议只加入你信任的房间 —— 隧道虽然加密了，对方是陌生人还是留个心眼。</p>
+              </div>
+              <div class="noticeblock">
+                <h4>进不去？</h4>
+                <p id="noticeFail"></p>
+                <p>其他问题看左边「帮助」页，或者点上面「运行日志」把日志导出来发我。</p>
+              </div>
+            </div>
+
+            <div class="roompane" id="pane-log">
+              <div class="roomlogtools">
+                <button class="tbtn" id="copyLogRoom">复制</button>
+                <!-- 用 data 属性标记"这是导出入口"，JS 按属性找 —— 不靠 id 拼，见 07-room.js 那段说明 -->
+                <button class="tbtn" data-export-log>导出</button>
+              </div>
+              <div class="termbody roomterm" id="termRoom"></div>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- ============ 帮助 ============ -->
+      <section id="page-help" class="page">
+        <div class="pagehead">
+          <div>
+            <h2>帮助</h2>
+            <p class="sub">常见的坑都在这儿，先看一眼能省很多时间</p>
+          </div>
+        </div>
+
+        <!-- 帮助页自己挑游戏看 —— 不用跟着"当前在玩的那个"：
+             还没选游戏的人也能看，或者先看看别的游戏怎么弄再决定 ✓ -->
+        <div class="helppick">
+          <label for="helpGameSel">看哪个游戏的教程</label>
+          <select id="helpGameSel" class="helpgame"></select>
+        </div>
+
+        <!-- 分类一次只看一类。
+             原来七八条问题平铺在一页上，用户得从头扫到尾才能找到自己那条 ✗ -->
+        <div class="cats" id="helpCats">
+          <button class="cat active" data-cat="first">第一次联机</button>
+          <button class="cat" data-cat="fail">连不上时</button>
+          <button class="cat" data-cat="room">房间里的事</button>
+          <button class="cat" data-cat="safe">安全和其他</button>
+        </div>
+
+        <!-- ① 第一次联机 —— 内容**按游戏渲染**进来（见 helpFirstGame / renderHelpFirst） -->
+        <div class="catpanel show" data-panel="first">
+
+          <!-- ── 我的世界 ── -->
+          <!-- 「第一次联机」整块是**渲染进来**的（见 01-core.js 的 renderHelpFirst）——
+               🔑 加游戏只要往 GAMES 加一条数据，这儿和渲染函数都不用动 ✓
+               （以前是一个游戏手写一份、靠 data-game 显隐 ⇒ 每加一个都可能漏 ✗） -->
+          <div id="helpFirstGame"></div>
+
+          <!-- （泰拉瑞亚那份、以及"还没写过说明的游戏"的通用兜底，
+               都搬到 01-core.js 的 GAMES / GAME_FALLBACK 里去了 ✓） -->
+        </div>
+
+
+        <!-- ② 连不上时 -->
+        <div class="catpanel" data-panel="fail">
+          <div class="faq">
+            <div class="q"><span class="qi">?</span>朋友那边报「连接被拒绝」</div>
+            <div class="a">多半是房主的游戏服务端没开好。让房主确认服务端窗口开着、控制台没报错，
+              再看看端口和建房时填的是不是一样。</div>
+          </div>
+          <!-- 「报无效会话」那条是**我的世界专有**的 ⇒ 已经挪进 GAMES 的 tips 里，
+               跟着游戏走（选泰拉瑞亚时它不会出现 ✓） -->
+          <div class="faq">
+            <div class="q"><span class="qi">?</span>一直卡在「打洞中」，最后失败</div>
+            <div class="a">双方的网络环境不支持直连（比如双层路由器、严格的公司网络、部分移动网络）。
+              换个网络试试 —— <b>手机热点</b>是最省事的验证办法。</div>
+          </div>
+          <div class="faq">
+            <div class="q"><span class="qi">?</span>状态一直是「已连接」但游戏进不去</div>
+            <div class="a">隧道通了，问题在游戏那一端。检查朋友填的地址和端口对不对，
+              以及房主那边的游戏是不是还开着。</div>
+          </div>
+          <div class="faq">
+            <div class="q"><span class="qi">?</span>建房时说端口被占用</div>
+            <div class="a">那个端口被别的程序占了。换一个（比如 25565 → 25566）就行，两边不用填一样的。</div>
+          </div>
+        </div>
+
+        <!-- ③ 房间里的事 -->
+        <div class="catpanel" data-panel="room">
+          <div class="faq">
+            <div class="q"><span class="qi">?</span>房主怎么踢人？</div>
+            <div class="a">房间页的成员列表里，每人后面有「踢出」和「拉黑」。
+              <b>踢出</b>是断开但还能再进；<b>拉黑</b>是他再也进不了这个房间。</div>
+          </div>
+          <div class="faq">
+            <div class="q"><span class="qi">?</span>最多能进几个人？</div>
+            <div class="a">建房时自己填，默认 4 人，最多 100 人。人越多，房主电脑和上传带宽压力越大 ——
+              联机质量取决于房主那边的上行。</div>
+          </div>
+          <div class="faq">
+            <div class="q"><span class="qi">?</span>怎么给房间设密码？</div>
+            <div class="a">房间页上有「修改房间密码」。改完<b>只影响之后加入的人</b>，
+              已经在房间里的朋友不会掉线。留空就是取消密码。</div>
+          </div>
+          <div class="faq">
+            <div class="q"><span class="qi">?</span>名字是谁起的？能自己改吗？</div>
+            <div class="a">名字是软件随机给你的（在「个人信息」页点「换一个」可以再摇）。
+              只能从词库里摇 —— 这样房间里不会出现奇怪的名字。</div>
+          </div>
+        </div>
+
+        <!-- ④ 安全和其他 -->
+        <div class="catpanel" data-panel="safe">
+          <div class="faq">
+            <div class="q"><span class="qi">?</span>游戏数据会经过服务器吗？</div>
+            <div class="a"><b>不会。</b>两台电脑是直接连的，穿透服务器只帮忙交换一下地址，
+              看不到也经手不了你的游戏内容。隧道全程 AES-128 加密。</div>
+          </div>
+          <div class="faq">
+            <div class="q"><span class="qi">?</span>Windows 提示「已保护你的电脑」</div>
+            <div class="a">没有购买代码签名证书的程序都会这样。点「更多信息」→「仍要运行」即可。
+              杀毒软件如果报毒，把它加进白名单。</div>
+          </div>
+          <div class="faq">
+            <div class="q"><span class="qi">?</span>关窗口的时候它问我要干什么</div>
+            <div class="a">这是怕你联机中误关。去「设置」页把「当关闭窗口时」改成
+              <b>退出主程序</b>，以后点 X 就直接退了，不会再问。</div>
+          </div>
+          <div class="faq">
+            <div class="q"><span class="qi">?</span>这个软件收费吗？</div>
+            <div class="a">完全免费，没有会员、没有广告。联机要在客户端里登录一个账号（邮箱验证码注册）。</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ 教程：房主怎么开局域网 ============ -->
+      <section id="page-tutorial" class="page">
+        <button class="back" data-back="create">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+          返回创建房间
+        </button>
+
+        <div class="pagehead">
+          <div>
+            <h2>房主：怎么开局域网</h2>
+            <p class="sub">以 Minecraft Java 版为例，跟着截图一步步做</p>
+          </div>
+        </div>
+
+        <div class="tut">
+          <div class="tutstep">
+            <div class="tutnum">1</div>
+            <div class="tutbody">
+              <div class="tuttext">先打开 Minecraft 游戏</div>
+              <img class="tutimg" src="__TUT01__" alt="">
+            </div>
+          </div>
+
+          <div class="tutstep">
+            <div class="tutnum">2</div>
+            <div class="tutbody">
+              <div class="tuttext">点「<b>单人游戏</b>」，选择你想和朋友联机的那<b>个存档</b></div>
+              <img class="tutimg" src="__TUT02__" alt="">
+            </div>
+          </div>
+
+          <div class="tutstep">
+            <div class="tutnum">3</div>
+            <div class="tutbody">
+              <div class="tuttext">进入游戏后按 <b>Esc</b> 打开菜单，点击「<b>对局域网开放</b>」</div>
+              <img class="tutimg" src="__TUT03__" alt="">
+            </div>
+          </div>
+
+          <div class="tutstep">
+            <div class="tutnum">4</div>
+            <div class="tutbody">
+              <div class="tuttext">
+                调整好房间设置（游戏模式、是否允许作弊），点击下方「<b>创造一个局域网世界</b>」。
+              </div>
+              <img class="tutimg" src="__TUT04a__" alt="" style="margin-bottom:16px">
+              <div class="tuttext">
+                低版本游戏会直接分配一个端口并在聊天栏显示出来 —— <b>记住这个端口</b>。
+              </div>
+              <img class="tutimg" src="__TUT04b__" alt="">
+            </div>
+          </div>
+
+          <div class="tutstep">
+            <div class="tutnum">5</div>
+            <div class="tutbody">
+              <div class="tuttext">
+                <b>高版本</b>会弹出一个框让你<b>自己填端口号</b>：填一个 <b>1024 ~ 65535</b> 之间的数字
+                （比如 1314 就很好记），然后点「创造一个局域网世界」。
+              </div>
+              <img class="tutimg" src="__TUT05__" alt="">
+            </div>
+          </div>
+
+          <div class="tutstep">
+            <div class="tutnum">6</div>
+            <div class="tutbody">
+              <div class="tuttext">
+                看到聊天栏提示「<b>本地游戏已在端口 [1314] 上开启</b>」就说明成功了 ——
+                这个端口号就是接下来要用的。
+              </div>
+              <img class="tutimg" src="__TUT06__" alt="">
+            </div>
+          </div>
+
+          <div class="tutstep">
+            <div class="tutnum">7</div>
+            <div class="tutbody">
+              <div class="tuttext">回到本工具，把刚才那个端口填进「<b>游戏端口</b>」</div>
+              <img class="tutimg" src="__TUT07__" alt="">
+            </div>
+          </div>
+
+          <div class="tutstep">
+            <div class="tutnum">8</div>
+            <div class="tutbody">
+              <div class="tuttext">
+                选好「人数上限」，点「<b>创建房间</b>」，就会出现一个<b>房间 ID</b>
+              </div>
+              <img class="tutimg" src="__TUT08__" alt="">
+            </div>
+          </div>
+
+          <div class="tutstep">
+            <div class="tutnum">9</div>
+            <div class="tutbody">
+              <div class="tuttext">
+                把房间 ID 发给朋友，让他点「<b>加入房间</b>」连过来 —— 就能一起玩了
+              </div>
+              <img class="tutimg" src="__TUT09__" alt="">
+            </div>
+          </div>
+        </div>
+
+        <div class="tutend" style="margin-top:24px">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+          搞定！朋友那边的步骤见「加入房间」页里的教程
+        </div>
+      </section>
+
+      <!-- ============ 教程：朋友怎么加入 ============ -->
+      <section id="page-tutorial-join" class="page">
+        <button class="back" data-back="join">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+          返回加入房间
+        </button>
+
+        <div class="pagehead">
+          <div>
+            <h2>朋友：怎么加入房间</h2>
+            <p class="sub">比创建房间简单多了，跟着截图走一遍就会</p>
+          </div>
+        </div>
+
+        <div class="tut">
+          <div class="tutstep">
+            <div class="tutnum">1</div>
+            <div class="tutbody">
+              <div class="tuttext">把房主发给你的<b>房间 ID</b> 填进输入框</div>
+              <img class="tutimg" src="__TUTj1__" alt="">
+            </div>
+          </div>
+
+          <div class="tutstep">
+            <div class="tutnum">2</div>
+            <div class="tutbody">
+              <div class="tuttext">
+                点「<b>加入房间</b>」，稍等一会儿会显示一个<b>联机地址</b> —— <b>记住它</b>
+              </div>
+              <img class="tutimg" src="__TUTj2__" alt="">
+            </div>
+          </div>
+
+          <div class="tutstep">
+            <div class="tutnum">3</div>
+            <div class="tutbody">
+              <div class="tuttext">
+                打开我的世界 → 点「<b>多人游戏</b>」→ 点右下角的「<b>添加服务器</b>」
+              </div>
+              <img class="tutimg" src="__TUTj3__" alt="">
+            </div>
+          </div>
+
+          <div class="tutstep">
+            <div class="tutnum">4</div>
+            <div class="tutbody">
+              <div class="tuttext">
+                在「<b>服务器地址</b>」里粘贴刚才那个地址（名字随便起），然后点「<b>完成</b>」
+              </div>
+              <img class="tutimg" src="__TUTj4__" alt="" style="margin-bottom:16px">
+              <img class="tutimg" src="__TUTj5__" alt="">
+            </div>
+          </div>
+
+          <div class="tutstep">
+            <div class="tutnum">5</div>
+            <div class="tutbody">
+              <div class="tuttext">
+                列表里出现这个服务器就快成功了 —— 点它一下，再点「<b>加入服务器</b>」；
+                或者<b>直接双击</b>它
+              </div>
+              <img class="tutimg" src="__TUTj6__" alt="">
+            </div>
+          </div>
+
+          <div class="tutstep">
+            <div class="tutnum">6</div>
+            <div class="tutbody">
+              <div class="tuttext">顺利的话，你就进去了</div>
+              <img class="tutimg" src="__TUTj7__" alt="">
+            </div>
+          </div>
+        </div>
+
+        <div class="tutend" style="margin-top:24px">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+          搞定！房主那边的步骤见「创建房间」页里的教程
+        </div>
+      </section>
+
+      <!-- ============ 设置 ============ -->
+      <section id="page-netcheck" class="page">
+        <div class="pagehead">
+          <div>
+            <h2>网络自检</h2>
+            <p class="sub">连不上别人时先来这儿测一下 —— 结论在你手上，就不用互相猜了</p>
+          </div>
+          <div class="pagehead-right">
+            <button class="btn sm primary" id="diagRunAll">全部检测</button>
+          </div>
+        </div>
+
+        <div class="diagsummary" id="diagSummary" hidden>
+          <span class="diagsum-dot"></span>
+          <span id="diagSummaryText"></span>
+        </div>
+
+        <div class="card setgroup">
+          <div class="setrow">
+            <div class="setinfo">
+              <div class="setname">能不能连上穿透服务器<span class="diagbadge" id="badgeServer"></span></div>
+              <div class="setdesc">
+                连不上就什么都做不了。顺带看看延迟 —— 它只影响房间操作快不快，不影响游戏里的流畅度。
+              </div>
+            </div>
+            <button class="btn sm" id="serverCheckBtn">开始检测</button>
+          </div>
+          <div class="diagbody" id="serverResult"></div>
+        </div>
+
+        <div class="card setgroup">
+          <div class="setrow">
+            <div class="setinfo">
+              <div class="setname">能不能打洞直连<span class="diagbadge" id="badgeNat"></span></div>
+              <div class="setdesc">
+                查你的网络是「锥型」还是「对称型」。对称型打洞打不通，只能换网络。
+              </div>
+            </div>
+            <button class="btn sm" id="natCheckBtn">开始检测</button>
+          </div>
+          <div class="diagbody" id="natResult"></div>
+        </div>
+
+        <div class="card setgroup">
+          <div class="setrow">
+            <div class="setinfo">
+              <div class="setname">IPv6 直连<span class="diagbadge" id="badgeV6"></span></div>
+              <div class="setdesc">
+                有 IPv6 就不受对称型限制，也不用打洞。<b>但没有也不影响正常联机</b> ——
+                它只是那些「打洞打不通」的网络的另一条路。
+              </div>
+            </div>
+            <button class="btn sm" id="ipv6CheckBtn">开始检测</button>
+          </div>
+          <div class="diagbody" id="v6Result"></div>
+        </div>
+
+        <div class="card setgroup">
+          <div class="setrow">
+            <div class="setinfo">
+              <div class="setname">代理 / VPN 是否在干扰<span class="diagbadge" id="badgeProxy"></span></div>
+              <div class="setdesc">
+                这类软件会悄悄接管 UDP，而打洞靠的就是 UDP。连不上时值得先看一眼。
+              </div>
+            </div>
+            <button class="btn sm" id="proxyCheckBtn">开始检测</button>
+          </div>
+          <div class="diagbody" id="proxyResult"></div>
+        </div>
+      </section>
+
+      <section id="page-settings" class="page">
+        <div class="pagehead">
+          <div>
+            <h2>设置</h2>
+            <p class="sub">设置保存在本机，换台电脑不会同步</p>
+          </div>
+        </div>
+
+        <h3>基本设置</h3>
+        <div class="card setgroup">
+          <div class="setrow">
+            <div class="setinfo">
+              <div class="setname">开机时运行</div>
+              <div class="setdesc">程序将在系统启动时自动运行</div>
+            </div>
+            <button class="switch" data-set="autoStart" role="switch" aria-checked="false" aria-label="开机时运行"></button>
+          </div>
+          <div class="setrow">
+            <div class="setinfo">
+              <div class="setname">当关闭窗口时</div>
+              <!-- 📌 "每次开机都问一次"是**故意留着**的：那是个提醒，免得用户忘了有这个功能 ✓
+                   这里选的是**默认那个**，弹窗里会告诉用户"上次选的是…" ✓ -->
+              <div class="setdesc">选定了就直接照做；选「每次询问」则关窗时弹一次让你挑</div>
+            </div>
+            <select class="dd" id="closeActionSel">
+              <option value="ask">每次询问</option>
+              <option value="tray">隐藏到任务栏托盘</option>
+              <option value="quit">退出主程序</option>
+            </select>
+          </div>
+        </div>
+
+        <h3>连接偏好</h3>
+        <div class="card setgroup">
+          <div class="setrow">
+            <div class="setinfo">
+              <div class="setname">记住每个游戏用过的端口</div>
+              <div class="setdesc">下次进同一个游戏，自动填回上次用的那个端口</div>
+            </div>
+            <button class="switch" data-set="rememberPort" role="switch" aria-checked="false" aria-label="记住每个游戏用过的端口"></button>
+          </div>
+          <div class="setrow">
+            <div class="setinfo">
+              <div class="setname">连接成功时提示音</div>
+              <!-- 这句要跟实际行为对得上（backend.go 的 hostGrew / onJoined）：
+                   房主侧只在**人数变多**时响（有人退出不响）；
+                   玩家侧只在**自己进房成功**那一下响（别人加入不响）。
+                   原来写的「你的游戏连上房间时」已经不对了 —— 那是老做法。 -->
+              <div class="setdesc">房主：有玩家加入时响一声；玩家：自己进房成功时响一声</div>
+            </div>
+            <button class="switch" data-set="soundOnConnect" role="switch" aria-checked="false" aria-label="连接成功时提示音"></button>
+          </div>
+          <div class="setrow">
+            <div class="setinfo">
+              <div class="setname">STUN 服务器</div>
+              <div class="setdesc">
+                用来探测自己的公网地址。<b>一般不用改</b> —— 只有默认那几个都探不到时才需要填，
+                多个用逗号隔开。
+              </div>
+              <div class="sethint" id="stunHint"></div>
+            </div>
+            <div class="setbtns">
+              <input class="input sm" id="stunInput" placeholder="用内置默认">
+              <button class="btn sm" id="stunReset">用默认</button>
+            </div>
+          </div>
+        </div>
+
+        <h3>更新设置</h3>
+        <div class="card setgroup">
+          <div class="setrow">
+            <div class="setinfo">
+              <div class="setname">启动时检查更新</div>
+              <div class="setdesc">程序启动时自动检查是否有新版本</div>
+            </div>
+            <button class="switch" data-set="checkUpdateOnStart" role="switch" aria-checked="false" aria-label="启动时检查更新"></button>
+          </div>
+          <div class="setrow">
+            <div class="setinfo">
+              <div class="setname">检测更新</div>
+              <div class="setdesc" id="updateHint">手动检查是否有新版本可用</div>
+            </div>
+            <!-- 这两个按钮必须拢在一个容器里：.setrow 是 space-between，
+                 分开写会被撑到两头（「更改」那个按钮栽过一次） -->
+            <div class="setbtns">
+              <button class="btn sm" id="btnGoDownload" hidden>去官网下载</button>
+              <button class="btn sm" id="btnCheckUpdate">检测更新</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- 🩸 这一块**藏起来了**（2026-10-17 老板：设置里这个不要显示）——
+             登录服务器地址对普通玩家没意义，还暴露内部信息 ✗
+             ⚠️ 但**代码保留**：服务器地址是最可能变的东西，万一真要改，
+             把这两处的 hidden 去掉就能用（JS 那边全有空判断，藏了不会报错 ✓） -->
+        <h3 hidden>账号</h3>
+        <div class="card setgroup" hidden>
+          <div class="setrow">
+            <div class="setinfo">
+              <div class="setname">登录服务器</div>
+              <div class="setdesc" id="srvNow">—</div>
+            </div>
+            <!-- 📌 它是从**登录页**搬过来的：老板说登录页上摆这行莫名其妙。
+                 但"能改"这个能力得留着（服务器地址是最可能变的东西，
+                 写死在 exe 里的话一换就得重发客户端）⇒ 挪到该待的地方 ✓ -->
+            <div class="setbtns">
+              <button class="btn sm" id="btnEditSrv">更改</button>
+            </div>
+          </div>
+          <div class="setrow" id="srvEditRow" hidden>
+            <div class="setinfo" style="flex:1 1 auto">
+              <input id="srvInput" class="srvinput" type="text" spellcheck="false"
+                     autocomplete="off" placeholder="https://panel.tinyaii.cn">
+              <div class="setdesc" id="srvMsg" style="margin-top:6px"></div>
+            </div>
+            <div class="setbtns">
+              <button class="btn sm" id="btnSaveSrv">保存</button>
+              <button class="btn sm" id="btnCancelSrv">取消</button>
+            </div>
+          </div>
+        </div>
+
+        <h3>其他</h3>
+        <div class="card setgroup">
+          <div class="setrow">
+            <div class="setinfo">
+              <div class="setname">配置文件位置</div>
+              <div class="setdesc" id="cfgPath">—</div>
+            </div>
+            <!-- 改位置：用户挑一个**父目录**，工具在里面建 p2plink 子目录放东西 ✓
+                 不往人家文件夹根上撒文件 ✓ -->
+            <div class="setbtns">
+              <button class="btn sm" id="btnPickCfg">更改</button>
+              <button class="btn sm" id="btnResetCfg" hidden>恢复默认</button>
+              <button class="btn sm" id="btnOpenCfg">打开文件夹</button>
+            </div>
+          </div>
+          <div class="setrow">
+            <div class="setinfo">
+              <div class="setname">恢复默认设置</div>
+              <div class="setdesc">把所有开关还原成初始状态（主题不变）</div>
+            </div>
+            <button class="btn sm danger" id="btnResetSet">恢复默认</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ 关于 ============ -->
+      <section id="page-about" class="page">
+        <div class="pagehead">
+          <div>
+            <h2>关于</h2>
+            <p class="sub">TI 联机 v1.0.1</p>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="lbl" style="margin-bottom:8px">这个软件做什么</div>
+          <div style="font-size:12px;color:var(--muted);line-height:1.9">
+            让两个人不用公网 IP、不用开服，就能一起玩局域网游戏。<br>
+            属于<b style="color:var(--fg2)">内网穿透</b>工具：两台电脑直接连通，
+            软件只负责把游戏端口搬过去。
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="lbl" style="margin-bottom:8px">你的数据安全吗</div>
+          <div style="font-size:12px;color:var(--muted);line-height:1.9">
+            游戏数据是<b style="color:var(--fg2)">两台电脑直连</b>的，<b style="color:var(--fg2)">不经过任何服务器</b>；<br>
+            隧道全程 <b style="color:var(--fg2)">AES-128-GCM 加密</b>。<br>
+            服务器只交换地址，看不到你的游戏内容。<br>
+            不走服务器中转，所以<b style="color:var(--fg2)">不限速、不限流量</b> ——
+            带宽就是你们两台电脑之间的真实带宽。
+          </div>
+        </div>
+
+        <h3>免责声明</h3>
+        <ul class="legal">
+          <li><b>本工具是非官方作品</b>，与任何游戏厂商（如 Mojang）都没有隶属或合作关系，
+            也不代表或代理任何官方服务。</li>
+          <li>本工具<b>只做点对点打洞与牵线</b>：<b>游戏数据不在服务器中转、
+            不提供接入服务</b> —— 两台电脑之间传了什么，这个软件不经手，也看不到。</li>
+          <li>穿透服务器不保存聊天记录、不保存游戏数据；服务端日志里出现的地址做了打码处理
+            （只留前两段，例如 120.227.*.*），仅用于排查故障。</li>
+          <li>本工具完全免费，作者不收取任何费用，也不提供任何形式的担保。</li>
+          <li>穿透服务器由作者个人提供，可能随时变更、关停或限制使用，不承诺长期可用。</li>
+          <li>使用本工具产生的一切后果（包括但不限于连接失败、游戏异常、存档损坏、数据丢失）
+            由使用者自行承担，作者不承担任何责任。</li>
+          <li><b>用途限定</b>：本工具<b>只用来联机上面列出的那几款游戏</b>。
+            它是照着「帮朋友一起玩游戏」这件事做的，
+            <b>不是通用的内网穿透 / 代理工具</b>。
+            请勿用它架设网站、代理、远程控制或其它服务，也请勿用于任何违法用途。</li>
+          <li>请遵守你所用游戏的服务条款，<b>仅与自己的朋友联机游玩</b>。</li>
+          <li>本工具不包含任何游戏本体。界面里那几个内置头像来自网络，
+            <b>版权归各自原作者</b>（Mojang、Re-Logic、ConcernedApe 等）所有，
+            在这里只当「认出谁是谁」的标记用；与上述公司 / 作者没有任何隶属或合作关系。
+            权利人若认为不妥，请联系作者删除。</li>
+          <li>建议只加入你信任的房间；隧道虽已加密，但对方若是陌生人请保持警惕。</li>
+        </ul>
+      </section>
+
+      <section id="page-author" class="page">
+        <div class="pagehead">
+          <div>
+            <h2>关于作者</h2>
+            <p class="sub">有疑问的话，可以在下面这些地方找到我</p>
+          </div>
+        </div>
+
+        <div class="authorlinks">
+          <!-- 官网排在最上面，且用主色描边 —— 它是最"正式"的入口，
+               下面三个群是日常答疑，主次分开才不显得一样重 -->
+          <button class="authorrow authorrow-main" data-url="https://ti.tinyaii.cn/">
+            <span class="authorrowico">官</span>
+            <span class="authorrowtxt">
+              <b>官方网站</b>
+              <i>下载最新版 · 更新日志 · 使用说明</i>
+            </span>
+            <span class="authorrowgo">打开 →</span>
+          </button>
+
+          <div class="authorrowsep"></div>
+
+          <button class="authorrow" data-url="https://qm.qq.com/q/RrUjoLACYi">
+            <span class="authorrowico">群</span>
+            <span class="authorrowtxt">
+              <b>TI 联机官方群</b>
+              <i>玩家交流、bug 反馈</i>
+            </span>
+            <span class="authorrowgo">打开 →</span>
+          </button>
+
+          <button class="authorrow" data-url="https://qm.qq.com/q/qK30iL6SG">
+            <span class="authorrowico">群</span>
+            <span class="authorrowtxt">
+              <b>我的世界</b>
+              <i>玩 MC 的一起</i>
+            </span>
+            <span class="authorrowgo">打开 →</span>
+          </button>
+
+          <button class="authorrow" data-url="https://qm.qq.com/q/BvdOPky1Xy">
+            <span class="authorrowico">群</span>
+            <span class="authorrowtxt">
+              <b>泰拉瑞亚</b>
+              <i>玩泰拉瑞亚的一起</i>
+            </span>
+            <span class="authorrowgo">打开 →</span>
+          </button>
+        </div>
+      </section>
+    </main>
+  </div>
+</div>
+
+<!-- 导出日志：单独一个小窗口 ——
+     「含地址」这种选项摆在日志栏里太突兀，收进来 -->
+<!-- 通用提示弹窗（注册成功之类"说一句就好"的事）——
+     📌 复用 .modal 那套样式，不另起一套 ✓ -->
+<div class="modal" id="infoModal">
+  <div class="modalbox">
+    <div class="modaltitle" id="infoTitle">提示</div>
+    <p class="modaldesc" id="infoDesc"></p>
+    <div class="modalbtns">
+      <button class="btn" id="infoOk">知道了</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal" id="exportModal">
+  <div class="modalbox">
+    <div class="modaltitle">导出日志</div>
+    <p class="modaldesc">选个格式，导出的文件会放到桌面。</p>
+
+    <div class="lbl" style="margin-bottom:4px">导出格式</div>
+    <div class="radiogroup">
+      <label class="radio">
+        <input type="radio" name="logfmt" value="md" checked>
+        <span>Markdown<small>.md · 发给别人看最清楚</small></span>
+      </label>
+      <label class="radio">
+        <input type="radio" name="logfmt" value="txt">
+        <span>纯文本<small>.txt · 什么设备都能打开</small></span>
+      </label>
+      <label class="radio">
+        <input type="radio" name="logfmt" value="json">
+        <span>JSON<small>.json · 给程序读的</small></span>
+      </label>
+    </div>
+
+    <label class="tchk">
+      <input type="checkbox" id="exportAddr">包含连接地址
+    </label>
+    <p class="modalhint">地址只保留 IP 的前两段和端口，完整地址不会写进文件。</p>
+    <div class="modalbtns">
+      <button class="btn sm" id="exportCancel">取消</button>
+      <button class="btn sm primary" id="exportOk">导出</button>
+    </div>
+  </div>
+</div>
+
+
+
+<!-- 二次确认：关闭房间 / 退出房间 -->
+<div class="modal" id="confirmModal">
+  <div class="modalbox">
+    <div class="modaltitle" id="confirmTitle">确认</div>
+    <p class="modaldesc" id="confirmText"></p>
+    <div class="modalbtns">
+      <button class="btn sm" id="confirmNo">取消</button>
+      <button class="btn sm danger" id="confirmYes">确认</button>
+    </div>
+  </div>
+</div>
+
+<!-- 修改房间密码（房主） -->
+<div class="modal" id="passModal">
+  <div class="modalbox">
+    <div class="modaltitle">修改房间密码</div>
+    <p class="modaldesc">改完只影响<b>之后加入</b>的人 —— 已经在房间里的朋友不会掉线。留空表示取消密码。</p>
+    <input id="passInput" class="input" maxlength="32" placeholder="留空则不设密码">
+    <p class="modalhint" id="passHint">要设就至少 4 位；留空 = 不设密码。</p>
+    <div class="modalbtns">
+      <button class="btn sm" id="passCancel">取消</button>
+      <button class="btn sm primary" id="passOk">保存</button>
+    </div>
+  </div>
+</div>
+
+<!-- 管理黑名单（房主） -->
+<div class="modal" id="banModal">
+  <div class="modalbox">
+    <div class="modaltitle">管理黑名单</div>
+    <p class="modaldesc">被拉黑的人进不了这个房间。解除之后他就能重新加入。</p>
+    <div id="banList" class="banlist"></div>
+    <div class="modalbtns">
+      <button class="btn sm" id="banClose">关闭</button>
+    </div>
+  </div>
+</div>
+
+<!-- 通用提示弹窗。
+     为什么要它：失败原因原来只写进「运行日志」，而那个标签页没人会主动去翻 ——
+     密码填错了会看着像"什么都没发生"。这种必须让人一眼看到的事，得弹出来。 -->
+<div class="modal" id="alertModal">
+  <div class="modalbox">
+    <div class="modaltitle" id="alertTitle">提示</div>
+    <p class="modaldesc" id="alertText"></p>
+    <div class="modalbtns">
+      <button class="btn primary" id="alertOk">知道了</button>
+    </div>
+  </div>
+</div>
+
+<!-- 关窗口弹窗：点 X 时后端会拦住关闭、把这儿叫出来。
+     勾了「不再提醒」就本次开机都照这个来（重启之后又恢复弹窗）。 -->
+<!-- 发现新版本。两条路都弹它：启动时静默查到的、手动点「检测更新」查到的 -->
+<div class="modal" id="updateModal">
+  <div class="modalbox">
+    <button class="modalx" id="updateX" aria-label="关闭">×</button>
+    <div class="modaltitle">发现新版本</div>
+    <p class="modaldesc" id="updateText"></p>
+    <p class="modalhint" id="updateNote" hidden></p>
+    <!-- 打开下载页失败时显示在这里。
+         🩸 别只往设置页的状态栏写：弹窗开着的时候状态栏在它后面，
+         用户看到的就是"点了没反应" ✗（2026-10-17 踩过） -->
+    <p class="modalhint" id="updateErr" hidden style="color:var(--err)"></p>
+    <div class="modalbtns">
+      <button class="btn" id="btnUpdLater">以后再说</button>
+      <button class="btn primary" id="btnUpdGo">去官网下载</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal" id="closeModal">
+  <div class="modalbox">
+    <button class="modalx" id="closeX" aria-label="关闭">×</button>
+    <div class="modaltitle">关闭 TI 联机</div>
+    <p class="modaldesc">联机中关掉的话，连接就断了。</p>
+    <label class="modalcheck">
+      <input type="checkbox" id="closeRemember">
+      <span>不再提醒</span>
+    </label>
+    <div class="modalbtns">
+      <button class="btn sm" id="closeTray">最小化到托盘</button>
+      <button class="btn sm danger" id="closeQuit">彻底关闭</button>
+    </div>
+  </div>
+</div>
+
+<!-- 成员行尾「⋮」的小菜单（房主才看得到、才点得开）。
+     用 fixed 定位、坐标由 JS 按按钮算 —— 左栏窄，菜单挂行里会被裁掉。 -->
+<div class="popmenu" id="memMenu" hidden>
+  <button type="button" data-mem-act="kick">踢出</button>
+  <button type="button" data-mem-act="ban" class="danger">拉黑</button>
+</div>
+
+<script>
+__JS__
+</script>
+</body>
+</html>

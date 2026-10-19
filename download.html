@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<link rel="icon" type="image/png" sizes="16x16" href="favicon-16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
+<link rel="icon" type="image/png" sizes="48x48" href="favicon-48.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>下载 · TI 联机</title>
+<meta name="description" content="下载 TI 联机：Windows 10/11 64 位，完全免费。推荐安装版。">
+
+<!--
+  这一页的规矩跟 index.html 一样（别破）：
+    · 不放任何第三方脚本、统计代码、字体外链 ✓
+    · 图标一律内联 SVG ✓
+    · 配色/排版跟 index.html 是**同一套** —— 改主题色要两个文件一起改 ✗
+
+  ⚠️ 硬编码在页面里的东西，换版本时必须一起改：
+    · 版本号 1.0.1、两个文件名、文件大小、SHA256（`<details>` 里那两串）
+    漏一个就会出现"页面上写着 1.0.1，网盘里已经是 1.0.2" ✗
+-->
+
+<script>
+  (function () {
+    var t = 'dark';
+    try { t = localStorage.getItem('ti-theme') || 'dark'; } catch (e) {}
+    document.documentElement.setAttribute('data-theme', t);
+  })();
+</script>
+<style>
+  /* 配色：两套，默认深色 —— 跟 index.html 同一套值（照抄客户端）✓ */
+  :root {
+    --bg: #171b30;
+    --bg2: #12152a;
+    --card: #212745;
+    --soft: #1b2039;
+    --line: #2f3556;
+    --line-soft: #272c4a;
+    --fg: #eceffa;
+    --fg2: #c3c9de;
+    --hint: #6e7795;
+    --accent: #2fe0b0;
+    --accent-fg: #08211b;
+    --accent-soft: rgba(47, 224, 176, .14);
+    --warn: #e3b341;
+    --warn-soft: rgba(227, 179, 65, .12);
+    --warn-line: rgba(227, 179, 65, .34);
+    --warn-fg: #f0c860;
+    --ok: #4ade80;
+    --err: #ff7b7b;
+    --radius: 16px;
+    --shadow: none;
+    color-scheme: dark;
+  }
+
+  [data-theme="light"] {
+    --bg: #ffffff;
+    --bg2: #f6f7f9;
+    --card: #ffffff;
+    --soft: #f6f8f9;
+    --line: #e5e9ed;
+    --line-soft: #eff1f4;
+    --fg: #101418;
+    --fg2: #4b535c;
+    --hint: #8b939c;
+    --accent: #4f46e5;
+    --accent-fg: #ffffff;
+    --accent-soft: #eef0ff;
+    --warn: #b4791b;
+    --warn-soft: #fff8e8;
+    --warn-line: #f2e0b6;
+    --warn-fg: #6b4a0d;
+    --ok: #12a05c;
+    --err: #d23b3b;
+    --shadow: 0 1px 2px rgba(16, 20, 24, .04), 0 8px 24px -12px rgba(16, 20, 24, .12);
+    color-scheme: light;
+  }
+
+  /* 顶部导航（下载页用简化版） */
+  .nav { position: fixed; top: 0; left: 0; right: 0; z-index: 50;
+         background: var(--bg); border-bottom: 1px solid var(--line); }
+  .nav-in { display: flex; align-items: center; gap: 20px; height: 58px; }
+  .nav-brand { display: flex; align-items: center; gap: 9px;
+               font-size: 15.5px; font-weight: 700; color: var(--fg);
+               text-decoration: none; letter-spacing: .3px; }
+  .nav-brand .mark { width: 20px; height: 20px; border-radius: 7px; flex: none; background: var(--accent); }
+  .nav-links { display: flex; align-items: center; gap: 4px; margin-left: auto; }
+  .nav-links > a { padding: 7px 11px; border-radius: 9px; font-size: 14px;
+                   color: var(--fg2); text-decoration: none; }
+  .nav-links > a:hover { background: var(--accent-soft); color: var(--accent); }
+  .theme-btn { display: flex; align-items: center; justify-content: center;
+               width: 34px; height: 34px; margin-left: 6px;
+               border: 1px solid var(--line); border-radius: 10px;
+               background: var(--card); color: var(--fg2); cursor: pointer; padding: 0; }
+  .theme-btn:hover { color: var(--accent); border-color: var(--accent); }
+  .theme-btn svg { width: 17px; height: 17px; stroke: currentColor; fill: none;
+                   stroke-width: 1.9; stroke-linecap: round; stroke-linejoin: round; }
+  .ico-sun { display: block; } .ico-moon { display: none; }
+  [data-theme="light"] .ico-sun { display: none; }
+  [data-theme="light"] .ico-moon { display: block; }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    font-family: system-ui, -apple-system, "Segoe UI", "Microsoft YaHei", sans-serif;
+    color: var(--fg);
+    background: var(--bg);
+    padding-top: 58px;   /* 给固定导航让位 */
+    line-height: 1.75;
+    -webkit-font-smoothing: antialiased;
+  }
+  .wrap { max-width: 880px; margin: 0 auto; padding: 0 24px; }
+
+  /* ── 顶栏 ─────────────────────────────────────── */
+  .top {
+    border-bottom: 1px solid var(--line);
+    background: linear-gradient(180deg, var(--bg2), var(--bg));
+  }
+  .top .wrap {
+    display: flex; align-items: center; justify-content: space-between;
+    height: 62px;
+  }
+  .brand {
+    display: inline-flex; align-items: center; gap: 9px;
+    text-decoration: none; color: var(--fg);
+    font-weight: 650; font-size: 15px;
+  }
+  .brand .dot {
+    width: 8px; height: 8px; border-radius: 50%;
+    background: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft);
+  }
+  .back { font-size: 14px; color: var(--fg2); text-decoration: none; }
+  .back:hover { color: var(--accent); }
+
+  /* ── 标题区 ───────────────────────────────────── */
+  .head { padding: 46px 0 8px; }
+  h1 { font-size: 30px; margin: 0 0 10px; font-weight: 700; letter-spacing: -.4px; }
+  .lead { color: var(--fg2); font-size: 15.5px; margin: 0; }
+  .lead b { color: var(--fg); font-weight: 600; }
+
+  section { padding: 34px 0; }
+  h2 {
+    font-size: 19px; margin: 0 0 6px; font-weight: 650; letter-spacing: -.2px;
+  }
+  .sub { color: var(--fg2); font-size: 14.5px; margin: 0 0 20px; }
+  p { margin: 0 0 12px; color: var(--fg2); font-size: 14.8px; }
+
+  /* ── 版本卡 ───────────────────────────────────── */
+  .vers { display: grid; gap: 16px; grid-template-columns: 1fr 1fr; }
+  @media (max-width: 700px) { .vers { grid-template-columns: 1fr; } }
+
+  .ver {
+    position: relative;
+    background: var(--card); border: 1px solid var(--line);
+    border-radius: var(--radius); padding: 22px 22px 18px;
+    box-shadow: var(--shadow);
+  }
+  /* 推荐那个用主色描边 + 角标，**不用**放大或阴影对比 —— 两个都很好用，
+     只是大部分人装安装版更省事 ✓ */
+  .ver.rec { border-color: var(--accent); box-shadow: var(--shadow); }
+  .ver.rec::after {
+    content: "推荐";
+    position: absolute; top: -11px; left: 20px;
+    background: var(--accent); color: var(--accent-fg);
+    font-size: 12px; font-weight: 600; letter-spacing: .2px;
+    padding: 2px 10px; border-radius: 999px;
+  }
+  .ver h3 { font-size: 16px; margin: 4px 0 4px; font-weight: 650; }
+  .file {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 12.6px; color: var(--fg2);
+    background: var(--soft); border: 1px solid var(--line);
+    border-radius: 7px; padding: 5px 9px;
+    display: block; margin: 10px 0 4px;
+    overflow-wrap: anywhere;
+  }
+  .size { font-size: 12.6px; color: var(--hint); margin: 0 0 14px; }
+  .ver ul { margin: 0; padding: 0; list-style: none; }
+  .ver li {
+    position: relative; padding-left: 20px;
+    font-size: 13.8px; color: var(--fg2); margin-bottom: 5px;
+  }
+  .ver li::before {
+    content: ""; position: absolute; left: 5px; top: 9px;
+    width: 5px; height: 5px; border-radius: 50%; background: #c9d1d8;
+  }
+
+  /* 版本卡里的下载按钮：主推那个用实心，另一个用描边 */
+  .dl {
+    display: block; text-align: center; text-decoration: none;
+    margin-top: 16px; padding: 11px 16px; border-radius: 10px;
+    font-size: 14.5px; font-weight: 600;
+    background: var(--accent);
+    color: var(--accent-fg); border: 1px solid rgba(0, 0, 0, .06);
+    box-shadow: 0 6px 16px -8px rgba(14, 156, 116, .6);
+    transition: transform .12s, box-shadow .12s;
+  }
+  .dl:hover { transform: translateY(-1px); }
+  .dl.ghost {
+    background: var(--card); color: var(--accent);
+    border: 1px solid var(--line); box-shadow: none;
+  }
+  .dl.ghost:hover { background: var(--accent-soft); box-shadow: none; }
+
+  /* ── 渠道 ─────────────────────────────────────── */
+  .chans { display: grid; gap: 12px; }
+  .chan {
+    display: flex; align-items: center; gap: 14px;
+    padding: 15px 18px;
+    background: var(--card); border: 1px solid var(--line);
+    border-radius: 12px; text-decoration: none; color: var(--fg);
+    box-shadow: var(--shadow);
+    transition: border-color .14s, transform .14s;
+  }
+  .chan:hover { border-color: var(--accent); transform: translateY(-1px); }
+  .chan .ico {
+    flex: 0 0 auto; width: 36px; height: 36px; border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    background: var(--accent-soft); border: 1px solid #d6f0e6;
+  }
+  .chan .ico svg { width: 18px; height: 18px; stroke: var(--accent); fill: none; stroke-width: 1.9; stroke-linecap: round; stroke-linejoin: round; }
+  .chan .txt { flex: 1; min-width: 0; }
+  .chan .name { font-weight: 600; font-size: 14.8px; }
+  .chan .meta { font-size: 12.8px; color: var(--hint); }
+  .chan .go { color: var(--accent); font-size: 13.5px; font-weight: 600; white-space: nowrap; }
+
+  /* 官方群（2026-10-19 加）。
+     📌 群号用等宽字体 + user-select:all —— 点一下就整段选中，方便复制去 QQ 搜 ✓ */
+  .qq {
+    display: flex; align-items: baseline; gap: 6px 18px; flex-wrap: wrap;
+    padding: 22px 26px;
+    border: 1px solid var(--line); border-radius: var(--radius);
+    background: var(--card); box-shadow: var(--shadow);
+  }
+  .qq-label { font-size: 14px; color: var(--hint); }
+  .qq-num {
+    font-family: ui-monospace, Consolas, "Courier New", monospace;
+    font-size: 26px; font-weight: 700; letter-spacing: 1.5px;
+    color: var(--accent);
+    user-select: all; -webkit-user-select: all;
+  }
+  .qq-tip { font-size: 13.5px; color: var(--hint); flex-basis: 100%; }
+
+  /* 下载按钮正下方那条**一句话**提示（2026-10-19 加）。
+     🩸 详细的三步说明本来就有（下面 #warn 那节），但它在页面第 4 屏 ——
+        很多人点了下载、被蓝框拦住、回来根本翻不到 ✗
+     ⇒ 这儿只放一句「会弹框、不是病毒」+ 一个锚点过去，
+        三步骤**不在这里重抄一遍**（两处写就会分叉）✓ */
+  .dlhint {
+    display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap;
+    margin: 20px 0 0; padding: 13px 18px;
+    background: var(--warn-soft); border: 1px solid var(--warn-line);
+    border-radius: 12px;
+    font-size: 14.5px; color: var(--warn-fg);
+  }
+  .dlhint b { color: var(--warn-fg); }
+  .dlhint a {
+    color: var(--warn-fg); font-weight: 700; text-decoration: none;
+    white-space: nowrap;
+  }
+  .dlhint a:hover { text-decoration: underline; }
+
+  /* ── 提示框（没签名这件事，要显眼但不能像报错）── */
+  .warn {
+    background: var(--warn-soft);
+    border: 1px solid var(--warn-line);
+    border-radius: var(--radius);
+    padding: 24px 26px;
+  }
+  .warn h2 { color: var(--warn-fg); }
+  .warn h2 .ico2 { vertical-align: -3px; margin-right: 7px; }
+  .warn h2 .ico2 svg { width: 19px; height: 19px; stroke: var(--warn); fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+  .warn p { color: var(--warn-fg); opacity: .92; }
+  .warn p b { color: var(--warn-fg); }
+  .steps { counter-reset: w; margin: 16px 0 0; padding: 0; list-style: none; }
+  .steps li {
+    counter-increment: w; position: relative;
+    padding: 0 0 0 34px; margin-bottom: 12px;
+    font-size: 14.5px; color: var(--warn-fg);
+  }
+  .steps li::before {
+    content: counter(w);
+    position: absolute; left: 0; top: 1px;
+    width: 22px; height: 22px; border-radius: 50%;
+    background: var(--card); border: 1px solid var(--warn-line);
+    color: var(--warn); font-size: 12.5px; font-weight: 700;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .steps code, .warn code {
+    background: var(--card); border: 1px solid var(--warn-line);
+    padding: 1px 6px; border-radius: 5px;
+    font-family: ui-monospace, Consolas, monospace; font-size: 12.6px;
+  }
+
+  /* ── 常见问题 ─────────────────────────────────── */
+  details {
+    border: 1px solid var(--line); border-radius: 12px;
+    padding: 14px 18px; margin-bottom: 10px; background: var(--card);
+  }
+  details[open] { box-shadow: var(--shadow); }
+  summary {
+    cursor: pointer; font-weight: 600; font-size: 14.6px;
+    list-style: none; display: flex; justify-content: space-between; gap: 12px;
+  }
+  summary::-webkit-details-marker { display: none; }
+  summary::after { content: "+"; color: var(--hint); font-weight: 400; }
+  details[open] summary::after { content: "−"; }
+  details p { margin: 12px 0 0; font-size: 14.2px; }
+
+  .hash {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 12.2px; color: var(--fg2);
+    background: var(--soft); border: 1px solid var(--line);
+    border-radius: 7px; padding: 9px 11px; margin: 8px 0 14px;
+    overflow-wrap: anywhere; user-select: all;
+  }
+  .hash b { color: var(--fg); font-weight: 600; font-family: inherit; display: block; margin-bottom: 3px; }
+
+  footer {
+    border-top: 1px solid var(--line);
+    background: linear-gradient(180deg, #fff, var(--soft));
+    padding: 30px 0 50px; margin-top: 20px;
+  }
+  footer p { font-size: 13.2px; color: var(--hint); margin: 0 0 5px; }
+  footer a { color: var(--fg2); }
+</style>
+</head>
+<body>
+
+<header class="nav">
+  <div class="wrap nav-in">
+    <a class="nav-brand" href="index.html"><span class="mark"></span>TI 联机</a>
+    <nav class="nav-links">
+      <a href="index.html">首页</a>
+      <a href="index.html#faq">常见问题</a>
+      <button class="theme-btn" onclick="toggleTheme()" aria-label="切换深浅配色" title="切换深浅配色">
+        <svg class="ico-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.4v2.2M12 19.4v2.2M4.3 4.3l1.6 1.6M18.1 18.1l1.6 1.6M2.4 12h2.2M19.4 12h2.2M4.3 19.7l1.6-1.6M18.1 5.9l1.6-1.6"/></svg>
+        <svg class="ico-moon" viewBox="0 0 24 24"><path d="M20 14.5A8.2 8.2 0 0 1 9.5 4a8.5 8.5 0 1 0 10.5 10.5Z"/></svg>
+      </button>
+    </nav>
+  </div>
+</header>
+
+
+
+<div class="wrap">
+  <div class="head">
+    <h1>下载</h1>
+    <p class="lead">
+      <b>Windows 10 / 11（64 位）</b> · 完全免费 · 不需要安装运行时<br>
+      两种版本功能完全一样，只是「怎么装」不一样。
+    </p>
+  </div>
+
+  <!-- ══════════ 版本 ══════════ -->
+  <section>
+    <h2>选一个版本</h2>
+    <p class="sub">大部分人选左边那个就对了。</p>
+
+    <div class="vers">
+      <div class="ver rec">
+        <h3>安装版</h3>
+        <span class="file">TI联机-安装包-1.0.1.exe</span>
+        <p class="size">6.49 MB</p>
+        <ul>
+          <li>自动建好桌面和开始菜单的快捷方式</li>
+          <li>自带卸载器，能在「应用和功能」里正常卸载</li>
+          <li>以后升级直接装新的覆盖，不用先卸</li>
+        </ul>
+        <a class="dl" href="https://links.8uid.com/d/sgqiesyzod56">下载安装版</a>
+      </div>
+
+      <div class="ver">
+        <h3>绿色版</h3>
+        <span class="file">TI联机.exe</span>
+        <p class="size">10.65 MB</p>
+        <ul>
+          <li>单个 exe，双击就能用，不写注册表</li>
+          <li>想彻底清掉，直接删掉它就行</li>
+          <li>适合放 U 盘里带着走</li>
+        </ul>
+        <a class="dl ghost" href="https://links.8uid.com/d/mhhmjzdmlydf">下载绿色版</a>
+      </div>
+    </div>
+
+    <!-- 就在下载按钮下面：点了下载、被蓝框拦住的人，回来第一眼能看见 ✓ -->
+    <p class="dlhint">
+      <span><b>第一次运行会弹一个蓝色的「Windows 已保护你的电脑」</b> ——
+        那是因为没买代码签名证书，不是病毒。</span>
+      <a href="#warn">怎么跳过 →</a>
+    </p>
+  </section>
+
+  <!-- ══════════ 渠道 ══════════ -->
+  <section>
+    <h2>其他下载方式</h2>
+    <p class="sub">上面的按钮打不开时，从这儿下。</p>
+
+    <div class="chans">
+      <!-- 仓库的发行版排前面：比网盘正规，而且版本历史一眼能看 ✓ -->
+      <a class="chan" href="https://gitee.com/ctsq/ti-link/releases" target="_blank" rel="noopener noreferrer">
+        <span class="ico">
+          <svg viewBox="0 0 24 24"><path d="M12 2.5 3 7v10l9 4.5 9-4.5V7z"/><path d="M3 7l9 4.5L21 7"/><path d="M12 11.5v10"/></svg>
+        </span>
+        <span class="txt">
+          <span class="name">Gitee 发行版</span><br>
+          <span class="meta">国内下载快（实测几秒），源码也在这儿</span>
+        </span>
+        <span class="go">打开 →</span>
+      </a>
+
+      <a class="chan" href="https://github.com/TinyAII/ti-link/releases" target="_blank" rel="noopener noreferrer">
+        <span class="ico">
+          <svg viewBox="0 0 24 24"><path d="M20.5 13.5 12 22l-9-8.5V4a1.5 1.5 0 0 1 1.5-1.5h9.5z"/><circle cx="7.8" cy="7.8" r="1.4"/></svg>
+        </span>
+        <span class="txt">
+          <span class="name">GitHub 发行版</span><br>
+          <span class="meta">国外访问更稳；国内直连多半打不开</span>
+        </span>
+        <span class="go">打开 →</span>
+      </a>
+
+      <a class="chan" href="https://pan.quark.cn/s/40f876a211f3" target="_blank" rel="noopener noreferrer">
+        <span class="ico">
+          <svg viewBox="0 0 24 24"><path d="M20.5 14.5a3.5 3.5 0 0 0-3.5-3.5 5 5 0 0 0-9.6-1.4A3.6 3.6 0 0 0 4 16h13a3.5 3.5 0 0 0 3.5-1.5Z"/><path d="M12 12v6"/><path d="m9.5 15.5 2.5 2.5 2.5-2.5"/></svg>
+        </span>
+        <span class="txt">
+          <span class="name">夸克网盘</span><br>
+          <span class="meta">点开后在文件夹里选「安装版」或「绿色版」</span>
+        </span>
+        <span class="go">打开 →</span>
+      </a>
+
+      <!-- 以后加渠道就照着上面这块复制一份，换掉 href / 名字 / 说明 ✓ -->
+    </div>
+  </section>
+
+  <!-- ══════════ 安全提示（重点） ══════════ -->
+  <!-- id="warn" 是上面那条 .dlhint 的锚点，别删 ✓ -->
+  <section id="warn">
+    <div class="warn">
+      <h2>
+        <span class="ico2"><svg viewBox="0 0 24 24"><path d="M12 3 2.5 20h19z"/><path d="M12 9.5v5"/><path d="M12 17.6v.1"/></svg></span>
+        下载和运行时会有安全提示，这是正常的
+      </h2>
+      <p>
+        这个小工具<b>没有购买代码签名证书</b>。所以 Windows 和浏览器都不认识它，
+        会把它当成"来路不明"的文件拦一下 —— <b>这不是检测到病毒</b>，
+        提示只看"有没有签名"，不看软件本身做了什么。
+      </p>
+      <p>
+        <b>为什么不去买证书？</b>代码签名证书一年要几千块，而这是个免费、一个人维护的小工具，
+        暂时负担不起。与其拿这个当卖点，不如把话说清楚。
+      </p>
+
+      <ol class="steps">
+        <li>
+          浏览器下载时提示<code>不常见的下载</code>或<code>已阻止</code> ——
+          点下载项右边的「…」，选<b>保留</b>。
+        </li>
+        <li>
+          双击运行，出现蓝底的<b>「Windows 已保护你的电脑」</b> ——
+          点<b>「更多信息」</b>，再点<b>「仍要运行」</b>。
+        </li>
+        <li>
+          如果杀软报毒（常见于 360 / 火绒）：未签名的新程序经常被误判。
+          请选<b>信任 / 恢复</b>，或者先把文件加进白名单再运行。
+        </li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- ══════════ 校验 ══════════ -->
+  <section>
+    <h2>想确认文件没被动过？</h2>
+    <p class="sub">
+      没有签名的情况下，校验值是唯一能自己核对的办法。对不上就说明文件不完整、或者不是这一版 ——
+      删掉重下。
+    </p>
+    <details>
+      <summary>展开对应版本 1.0.1 的 SHA256</summary>
+      <p>Windows 上在文件所在目录打开 PowerShell，运行 <code>Get-FileHash 文件名 -Algorithm SHA256</code>，对比下面这串。</p>
+      <div class="hash"><b>TI联机-安装包-1.0.1.exe</b>fdd2252e1f95b423e06a99f9ffb586bfe91bfaf641354e0be4fe89a34a37d111</div>
+      <div class="hash"><b>TI联机.exe</b>53b8c3d88ed6723e8888b1e3fae2d936b9cba4c4b69ec4c287874492af30a3b7</div>
+      <div class="hash"><b>TI联机.zip（夸克网盘里那个）</b>63593ee4fbb7a10e67dfc1f461c02824a3338c90760f5284b59cde1fa22e7f96</div>
+    </details>
+  </section>
+
+  <!-- ══════════ 系统要求 / 常见问题 ══════════ -->
+  <section>
+    <h2>系统要求</h2>
+    <p class="sub">
+      Windows 10（1809 或更新）/ Windows 11，<b>64 位</b>。<br>
+      不需要装 .NET、Java、运行库之类的东西 —— 一个 exe 就是全部。<br>
+      使用时要能连上 <code>mc.tinyaii.cn:39000</code>（公司/学校网络如果封了端口，会连不上）。
+    </p>
+  </section>
+
+  <section>
+    <h2>常见问题</h2>
+
+    <details>
+      <summary>装的时候被拦了，装完怎么找不到程序？</summary>
+      <p>
+        安装版会在桌面和开始菜单里建「TI 联机」。如果桌面没有，去开始菜单搜「TI 联机」；
+        再不行就从安装目录直接双击 <code>TI联机.exe</code>。
+      </p>
+    </details>
+
+    <details>
+      <summary>提示缺少 VCRUNTIME140.dll / 打不开</summary>
+      <p>
+        这个程序是静态编译的，<b>不需要</b>额外运行库。真遇到这种提示，
+        多半是下载不完整（文件被截断）—— 按上面的校验值核对一下，对不上就重下。
+      </p>
+    </details>
+
+    <details>
+      <summary>怎么卸载？</summary>
+      <p>
+        安装版：开始菜单 →「卸载 TI 联机」，或者「设置 → 应用 → 已安装的应用」里找到它卸载。<br>
+        绿色版：直接删掉解压出来的文件夹。它在 <code>%AppData%\p2plink</code> 里存了登录状态和设置，
+        想彻底清干净就一起删掉。
+      </p>
+    </details>
+
+    <details>
+      <summary>32 位的 Windows 能用吗？</summary>
+      <p>不能，只提供 64 位版本。现在的 Windows 10/11 基本都是 64 位。</p>
+    </details>
+  </section>
+
+  <!-- ══════════ 官方群 ══════════ -->
+  <section>
+    <h2>还有问题？</h2>
+    <p class="sub">加群问最直接 —— 群里有人，也有和你一样在用的玩家。</p>
+    <div class="qq">
+      <span class="qq-label">官方 QQ 群</span>
+      <span class="qq-num">1107103581</span>
+      <span class="qq-tip">在 QQ 里搜这个群号加就行。</span>
+    </div>
+  </section>
+</div>
+
+<footer>
+  <div class="wrap">
+    <p>TI 联机 · 免费的点对点联机工具</p>
+    <p>本页面不加载任何第三方脚本，不做任何访问统计。</p>
+    <p><a href="index.html">返回首页</a></p>
+  </div>
+</footer>
+
+<script>
+  function toggleTheme() {
+    var cur = document.documentElement.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
+    document.documentElement.setAttribute('data-theme', cur);
+    try { localStorage.setItem('ti-theme', cur); } catch (e) {}
+  }
+</script>
+</body>
+</html>
