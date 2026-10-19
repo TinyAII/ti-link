@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>TI 联机 · 管理后台</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+  <!-- ── 登录 ───────────────────────────────────────────── -->
+  <div id="login" hidden>
+    <form id="loginForm" class="card" autocomplete="on">
+      <h1>TI 联机 · 管理后台</h1>
+      <p class="hint">这里是服务器主人用的地方。普通用户请在客户端里注册和登录。</p>
+      <label>邮箱
+        <input id="email" name="email" type="email" autocomplete="username" required>
+      </label>
+      <label>密码
+        <input id="password" name="password" type="password" autocomplete="current-password" required>
+      </label>
+      <p id="loginMsg" class="msg" role="alert"></p>
+      <button type="submit" id="loginBtn">登录</button>
+    </form>
+  </div>
+
+  <!-- ── 控制台 ───────────────────────────────────────────
+       布局：**左边一条固定菜单，右边内容区**。
+
+       📌 侧栏上那个 nav 的 id 仍然是 `tabs`，菜单项仍然是 `button[data-tab]` ——
+       这是故意的：app.js 那套「data-tab ↔ .panel 显隐」的机制一行都不用改 ✓
+       （换布局不该顺手把逻辑也重写一遍） -->
+  <div id="app" hidden>
+
+    <aside class="side">
+      <div class="brand">
+        <span class="logo">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+               stroke-width="2.3" stroke-linecap="round">
+            <circle cx="6" cy="12" r="2.4" /><circle cx="18" cy="6" r="2.4" /><circle cx="18" cy="18" r="2.4" />
+            <path d="M8.2 10.8l7.6-3.4M8.2 13.2l7.6 3.4" />
+          </svg>
+        </span>
+        <span class="brandtext">TI 联机<em>管理后台</em></span>
+      </div>
+
+      <div class="sidegroup">管理</div>
+
+      <nav id="tabs">
+        <!-- ⚠️ 第一个仍是默认页（app.js 登录后点的是"第一个标签"）⇒
+             顺序变了、默认页就跟着变：现在是「概览」✓ -->
+        <button data-tab="overview" class="on" title="概览">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round">
+            <path d="M5 20v-8M12 20V4M19 20v-5" />
+          </svg>
+          <span class="mtext">概览</span>
+        </button>
+        <button data-tab="codes" title="邀请码">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M20.6 13.4l-7.2 7.2a2 2 0 0 1-2.8 0l-7-7A2 2 0 0 1 3 12.2V5a2 2 0 0 1 2-2h7.2a2 2 0 0 1 1.4.6l7 7a2 2 0 0 1 0 2.8z" />
+            <circle cx="7.6" cy="7.6" r="1.1" />
+          </svg>
+          <span class="mtext">邀请码</span>
+        </button>
+        <button data-tab="accounts" title="账号">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round">
+            <circle cx="12" cy="8" r="3.6" />
+            <path d="M4.8 20.4a7.2 7.2 0 0 1 14.4 0" />
+          </svg>
+          <span class="mtext">账号</span>
+        </button>
+        <button data-tab="wall" title="大屏">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round">
+            <rect x="2.6" y="4.4" width="18.8" height="12.4" rx="1.6" />
+            <path d="M8.4 20.4h7.2M12 16.8v3.6" />
+          </svg>
+          <span class="mtext">大屏</span>
+        </button>
+        <button data-tab="rooms" title="房间">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M4 20V9l8-5 8 5v11" />
+            <path d="M9.5 20v-5.5h5V20" />
+          </svg>
+          <span class="mtext">房间</span>
+        </button>
+        <button data-tab="history" title="历史房间">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="9" />
+            <path d="M12 7.5V12l3 1.8" />
+          </svg>
+          <span class="mtext">历史</span>
+        </button>
+        <button data-tab="settings" title="设置">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="3.2" />
+            <path d="M19.4 15a1.6 1.6 0 0 0 .32 1.77l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06A1.6 1.6 0 0 0 15 19.4a1.6 1.6 0 0 0-1 1.47V21a2 2 0 1 1-4 0v-.09A1.6 1.6 0 0 0 9 19.4a1.6 1.6 0 0 0-1.77.32l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.6 1.6 0 0 0 4.6 15a1.6 1.6 0 0 0-1.47-1H3a2 2 0 1 1 0-4h.09A1.6 1.6 0 0 0 4.6 9a1.6 1.6 0 0 0-.32-1.77l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.6 1.6 0 0 0 9 4.6a1.6 1.6 0 0 0 1-1.47V3a2 2 0 1 1 4 0v.09A1.6 1.6 0 0 0 15 4.6a1.6 1.6 0 0 0 1.77-.32l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.6 1.6 0 0 0 19.4 9v.09A1.6 1.6 0 0 0 20.87 10H21a2 2 0 1 1 0 4h-.09a1.6 1.6 0 0 0-1.47 1z" />
+          </svg>
+          <span class="mtext">设置</span>
+        </button>
+      </nav>
+
+      <!-- 账号和退出收在侧栏底部（顶栏不要了 —— 内容区能多一行） -->
+      <div class="sidefoot">
+        <div class="sidegroup">当前账号</div>
+        <div class="who"><span id="whoami"></span></div>
+        <button id="logout">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
+               stroke-linecap="round" stroke-linejoin="round">
+            <path d="M15 4h3a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2h-3" />
+            <path d="M10 16l-4-4 4-4M6 12h10" />
+          </svg>
+          <span class="ltext">退出登录</span>
+        </button>
+      </div>
+    </aside>
+
+    <main>
+      <!-- 概览 -->
+      <section id="tab-overview" class="panel">
+        <div class="pagehead">
+          <div>
+            <h1>概览</h1>
+            <p class="sub">只有我们自己的聚合数字，没有任何「谁在连」。CPU / 内存 / 带宽都是**这个服务本身**的，不含这台机器上别的项目。</p>
+          </div>
+          <div class="acts">
+            <button id="autoRefresh" class="ghost">自动刷新：开</button>
+            <button id="reloadStats" class="ghost">刷新</button>
+          </div>
+        </div>
+
+        <div class="ranges" id="rangeBar">
+          <button class="rbtn" data-range="300" type="button">最近 5 分钟</button>
+          <button class="rbtn on" data-range="3600" type="button">最近 1 小时</button>
+          <button class="rbtn" data-range="21600" type="button">最近 6 小时</button>
+          <span class="updated" id="updatedAt"></span>
+        </div>
+
+        <div id="statsMsg" class="msg"></div>
+        <div class="cards" id="statCards"></div>
+        <div class="charts" id="charts"></div>
+      </section>
+
+      <!-- 大屏：给副屏 / 电视常驻用。
+           走的是**同一条路由机制**（#/wall），但一进来自带 body.wall ⇒
+           侧栏藏起来、配色固定深色、字号整体放大一档 ✓ -->
+      <section id="tab-wall" class="panel" hidden>
+        <div class="wallhead">
+          <div class="walltitle">TI 联机 · 运行大屏</div>
+          <div class="ranges" id="wallRangeBar">
+            <button class="rbtn" data-range="300" type="button">5 分钟</button>
+            <button class="rbtn on" data-range="3600" type="button">1 小时</button>
+            <button class="rbtn" data-range="21600" type="button">6 小时</button>
+          </div>
+          <span class="updated" id="wallUpdated"></span>
+        </div>
+        <div id="wallMsg" class="msg"></div>
+        <div class="cards" id="wallCards"></div>
+        <div class="charts" id="wallCharts"></div>
+      </section>
+
+      <!-- 邀请码 -->
+      <section id="tab-codes" class="panel" hidden>
+        <div class="pagehead">
+          <div>
+            <h1>邀请码</h1>
+            <p class="sub">一码一人，用一次就作废。备注填上「发给谁」，出事才查得到。</p>
+          </div>
+          <div class="acts">
+            <button id="csvBtn" class="ghost">导出 CSV</button>
+            <button id="reloadCodes" class="ghost">刷新</button>
+          </div>
+        </div>
+
+        <div class="card">
+          <h2>生成邀请码</h2>
+          <div class="row">
+            <label class="narrow">数量
+              <input id="genN" type="number" min="1" max="500" value="10">
+            </label>
+            <label>批号（可留空）
+              <input id="genBatch" type="text" placeholder="例：2026-10-15-老乡群">
+            </label>
+            <label>备注 —— 发给谁（可留空）
+              <input id="genNote" type="text" placeholder="例：张三 / zhangsan@qq.com">
+            </label>
+            <button id="genBtn">生成</button>
+          </div>
+          <p class="hint">备注就是追责用的那条线：填上"发给谁"，以后出问题才查得到。</p>
+        </div>
+
+        <div id="genResult" class="card" hidden>
+          <h2>刚生成的 <span id="genCount"></span> 个码</h2>
+          <p class="hint">离开这个页面就看不到了（列表里还能看到码本身，但复制整批就这一次方便）。</p>
+          <pre id="genList" class="codes"></pre>
+          <button id="copyBtn" class="ghost">复制全部</button>
+        </div>
+
+        <div class="card">
+          <div class="row between">
+            <h2>全部邀请码</h2>
+            <select id="batchFilter"><option value="">全部批号</option></select>
+          </div>
+          <table id="codesTable">
+            <thead>
+              <tr><th>邀请码</th><th>状态</th><th>批号</th><th>备注</th><th>使用者</th><th>时间</th><th>操作</th></tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- 账号 -->
+      <section id="tab-accounts" class="panel" hidden>
+        <div class="pagehead">
+          <div>
+            <h1>账号</h1>
+            <p class="sub">「强制下线」= 那个账号手上的令牌立刻作废，他下次请求就得重新登录（正在玩的房间不受影响）。</p>
+          </div>
+          <div class="acts">
+            <button id="reloadAccounts" class="ghost">刷新</button>
+          </div>
+        </div>
+        <div class="card">
+          <table id="accountsTable">
+            <thead>
+              <tr><th>#</th><th>邮箱</th><th>状态</th><th>角色</th><th>邀请码</th><th>注册时间</th><th>登录中</th><th>操作</th></tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- 房间 -->
+      <section id="tab-history" class="panel" hidden>
+        <div class="pagehead">
+          <div>
+            <h1>历史房间</h1>
+            <p class="sub">开过和进过的房间，含每个成员进来、离开的时间。<b>只留最近 30 天</b>。点一行进去看这间房的成员明细。账号显示的是<b>邮箱</b>（昵称能随时改，账号才不会认错人）。记录只用于排查问题，不含任何游戏内容 —— 游戏数据本来就不经过服务器。</p>
+          </div>
+          <div class="acts">
+            <button id="exportHistory" class="ghost">导出 CSV</button>
+            <button id="reloadHistory" class="ghost">刷新</button>
+          </div>
+        </div>
+        <div class="card">
+          <div class="row between">
+            <label class="narrow">搜索
+              <input id="historyQ" placeholder="房间号 / 游戏 / 昵称" autocomplete="off">
+            </label>
+            <span class="hint" id="historyCount"></span>
+          </div>
+          <div id="historyMsg" class="msg"></div>
+          <table id="historyTable">
+            <thead>
+              <tr><th>房间 ID</th><th>游戏</th><th>房主</th><th>开始</th><th>时长</th><th>最高在线</th><th>成员</th><th></th></tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </section>
+
+      <section id="tab-historydetail" class="panel" hidden>
+        <div class="pagehead">
+          <div>
+            <h1 id="hdTitle">历史房间</h1>
+            <p class="sub" id="hdSub"></p>
+          </div>
+          <div class="acts">
+            <button id="hdBack" class="ghost">← 返回历史</button>
+          </div>
+        </div>
+        <div id="hdMsg" class="msg"></div>
+        <div class="cards wide2" id="hdCards"></div>
+        <div id="hdSessions"></div>
+      </section>
+
+      <section id="tab-rooms" class="panel" hidden>
+        <div class="pagehead">
+          <div>
+            <h1>房间</h1>
+            <p class="sub">穿透服务器的内存状态。<b>点房间号进去</b>看成员明细（监管用）；这一页只能「关掉」整个房间 —— 真正的收尾是信令那边做的。来源地址只显示前后两段（够看出"是不是同一个人"）。</p>
+          </div>
+          <div class="acts">
+            <button id="autoRooms" class="ghost">自动刷新：开</button>
+            <button id="reloadRooms" class="ghost">刷新</button>
+          </div>
+        </div>
+        <div class="card">
+          <div class="row between">
+            <label class="narrow">游戏
+              <select id="gameFilter"><option value="">全部游戏</option></select>
+            </label>
+            <span class="hint" id="roomsCount"></span>
+          </div>
+          <div id="roomsMsg" class="msg"></div>
+          <table id="roomsTable">
+            <thead>
+              <tr><th>房间 ID</th><th>游戏</th><th>人数</th><th>房主</th><th>开的账号</th><th>开了多久</th><th>来源</th><th>操作</th></tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- 房间详情：从列表点进来的（`#/rooms/房间号`）。
+           ⚠️ 它**不在侧栏菜单里** —— 这是「房间」底下的子页面，
+           所以进来之后侧栏高亮仍然停在「房间」✓（见 app.js 的 showTab） -->
+      <section id="tab-roomdetail" class="panel" hidden>
+        <div class="pagehead">
+          <div>
+            <h1 id="rdTitle">房间</h1>
+            <p class="sub" id="rdSub"></p>
+          </div>
+          <div class="acts">
+            <button id="rdBack" class="ghost">← 返回列表</button>
+            <button id="rdClose" class="ghost danger">关闭整个房间</button>
+          </div>
+        </div>
+        <div id="rdMsg" class="msg"></div>
+        <div class="cards" id="rdCards"></div>
+        <div class="card">
+          <h2>成员</h2>
+          <p class="hint">
+            「信令流量」是这个人跟<b>穿透服务器</b>之间的收发字节 ——
+            游戏数据走两台机器直连、不经过服务器，所以这个数<b>很轻是正常的</b> ✗
+            别把它读成"他在传游戏数据"。
+          </p>
+          <table id="rdMembers">
+            <thead>
+              <tr>
+                <th>座位</th><th>昵称</th><th>游戏</th><th>来源</th>
+                <th>加入多久</th><th>信令流量 收/发</th><th>操作</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </section>
+
+      <section id="tab-settings" class="panel" hidden>
+        <div class="pagehead">
+          <div>
+            <h1>设置</h1>
+            <p class="sub">改完立刻生效 —— 不用重启信令，也不用重启面板。</p>
+          </div>
+        </div>
+        <div class="card">
+          <div class="setrow">
+            <div class="settext">
+              <div class="setname">注册需要邀请码</div>
+              <p class="sethint">
+                勾着的时候，注册必须有一个有效邀请码。
+                关掉之后谁都能注册（<b>仍然要收邮箱验证码</b>，所以刷号也不是白刷）。
+                <br>刚发布、想先让更多人进来试的时候，可以关掉。
+              </p>
+            </div>
+            <label class="switch" title="注册是否需要邀请码">
+              <input type="checkbox" id="setSignupNeedsCode">
+              <span class="track"><span class="knob"></span></span>
+            </label>
+          </div>
+        </div>
+        <p id="setMsg" class="setmsg"></p>
+      </section>
+    </main>
+  </div>
+
+  <script src="chart.js"></script>
+  <script src="app.js"></script>
+</body>
+
+</html>

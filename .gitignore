@@ -1,0 +1,8 @@
+# 编译产物
+/dist/
+
+# 临时文件与测试日志
+/tmp/
+
+# WorkBuddy 工具数据
+/.workbuddy/
