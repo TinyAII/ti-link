@@ -18,8 +18,8 @@
     · 配色/排版跟 index.html 是**同一套** —— 改主题色要两个文件一起改 ✗
 
   ⚠️ 硬编码在页面里的东西，换版本时必须一起改：
-    · 版本号 1.0.1、两个文件名、文件大小、SHA256（`<details>` 里那两串）
-    漏一个就会出现"页面上写着 1.0.1，网盘里已经是 1.0.2" ✗
+    · 版本号、两个文件名、文件大小、SHA256（`<details>` 里那两串）
+    漏一个就会出现"页面上写着旧版本号，网盘里已经是新的" ✗
 -->
 
 <script>
@@ -363,7 +363,7 @@
     <div class="vers">
       <div class="ver rec">
         <h3>安装版</h3>
-        <span class="file">TI联机-安装包-1.0.1.exe</span>
+        <span class="file">TI联机-安装包-1.0.2.exe</span>
         <p class="size">6.49 MB</p>
         <ul>
           <li>自动建好桌面和开始菜单的快捷方式</li>
@@ -481,10 +481,10 @@
       删掉重下。
     </p>
     <details>
-      <summary>展开对应版本 1.0.1 的 SHA256</summary>
+      <summary>展开对应版本 1.0.2 的 SHA256</summary>
       <p>Windows 上在文件所在目录打开 PowerShell，运行 <code>Get-FileHash 文件名 -Algorithm SHA256</code>，对比下面这串。</p>
-      <div class="hash"><b>TI联机-安装包-1.0.1.exe</b>fdd2252e1f95b423e06a99f9ffb586bfe91bfaf641354e0be4fe89a34a37d111</div>
-      <div class="hash"><b>TI联机.exe</b>53b8c3d88ed6723e8888b1e3fae2d936b9cba4c4b69ec4c287874492af30a3b7</div>
+      <div class="hash"><b>TI联机-安装包-1.0.2.exe</b>d668a432f4d21492bccea8a96048b933573e82d8e3d69ba80a20413415bd79cd</div>
+      <div class="hash"><b>TI联机.exe</b>375443b1295291f63d7743d3b8ec653397f6afa45221f9c6e02c3dd9fef0bb6d</div>
       <div class="hash"><b>TI联机.zip（夸克网盘里那个）</b>63593ee4fbb7a10e67dfc1f461c02824a3338c90760f5284b59cde1fa22e7f96</div>
     </details>
   </section>

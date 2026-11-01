@@ -589,13 +589,19 @@
 
   <section id="news">
     <h2>最近更新</h2>
-    <p class="sub">1.0.1 · 2026-10-19</p>
+    <p class="sub">1.0.2 · 2026-11-01</p>
     <div class="changelog">
-      <div class="cl-item"><b>断线自动重连</b><span>网络抖一下不再把房间整个结束，会自己重连（2/4/8/16/20 秒退避）</span></div>
-      <div class="cl-item"><b>修好打洞重试</b><span>换端口重试那一步之前拿不到对方地址，第二轮必然失败 —— 现在修好了</span></div>
-      <div class="cl-item"><b>打洞失败说清楚</b><span>会告诉你谁缺 IPv6、缺的是地址不是开关，不再丢一句「换成 IPv6 再试」</span></div>
-      <div class="cl-item"><b>连接状态分三档</b><span>正在连接（灰）/ 已连上（绿）/ 没连上（红）—— 不再一上来就红字吓人</span></div>
+      <div class="cl-item"><b>UPnP 端口映射</b><span>路由器支持的话，直接向它要一个公网端口 —— 不用打洞就能连，打洞失败的网络也多了条路</span></div>
     </div>
+    <details style="margin-top:18px">
+      <summary>上一版 1.0.1 改了什么</summary>
+      <div class="changelog" style="margin-top:14px">
+        <div class="cl-item"><b>断线自动重连</b><span>网络抖一下不再把房间整个结束，会自己重连（2/4/8/16/20 秒退避）</span></div>
+        <div class="cl-item"><b>修好打洞重试</b><span>换端口重试那一步之前拿不到对方地址，第二轮必然失败 —— 现在修好了</span></div>
+        <div class="cl-item"><b>打洞失败说清楚</b><span>会告诉你谁缺 IPv6、缺的是地址不是开关，不再丢一句「换成 IPv6 再试」</span></div>
+        <div class="cl-item"><b>连接状态分三档</b><span>正在连接（灰）/ 已连上（绿）/ 没连上（红）—— 不再一上来就红字吓人</span></div>
+      </div>
+    </details>
   </section>
 
   <section id="how">
