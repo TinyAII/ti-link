@@ -1,6 +1,6 @@
 {
   "version": "1.0.2",
-  "url": "https://ti.tinyaii.cn/",
+  "url": "https://tinyaii.github.io/ti-link/",
   "note": "新增 UPnP 端口映射：路由器支持的话不用打洞，直接连上",
-  "sig": "6RDrkKIERpcJ9OpoznGLtQgTYDOIVffrRiYp9RZ1KZWDqLDK8BJo3pG19jbG0LJuhKIB0FWf2FDLqQ0w/O+ODQ=="
+  "sig": "Hb+c6CaeQRjN0LhPyAL5jp6b8z/MbXr5eWfIaBsS+pvczscFDRR5rE1E3iN5QQnsCnjPQkPUed8GyXO5GPg+Ag=="
 }
